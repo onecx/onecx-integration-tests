@@ -28,7 +28,7 @@ name: Sonar
 
 on:
   pull_request:
-    branches: [sonar-integrate]
+    branches: [main]
 
   workflow_dispatch:
 
