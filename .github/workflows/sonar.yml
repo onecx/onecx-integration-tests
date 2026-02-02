@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_run:
     workflows: ['On PR']
     types:
@@ -17,6 +20,6 @@ jobs:
     uses: onecx/ci-angular/.github/workflows/angular-sonar-main.yml@v1
     secrets: inherit
   sonar-pr:
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+    if: (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') || github.event_name == 'pull_request'
     uses: onecx/ci-angular/.github/workflows/angular-pr-sonar.yml@v1
     secrets: inherit
