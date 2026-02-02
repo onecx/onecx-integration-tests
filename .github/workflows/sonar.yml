@@ -1,11 +1,22 @@
-name: Run Sonar
-
+name: Sonar
 on:
+  push:
+    branches:
+      - main
+  workflow_run:
+    workflows: ['On PR']
+    types:
+      - completed
   workflow_dispatch:
-  schedule:
-    - cron: '0 15 * * SUN' # 16:00 CET
-
+permissions:
+  contents: read
+  pull-requests: write
 jobs:
-  sonar:
+  sonar-main:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     uses: onecx/ci-angular/.github/workflows/angular-sonar-main.yml@v1
+    secrets: inherit
+  sonar-pr:
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+    uses: onecx/ci-angular/.github/workflows/angular-pr-sonar.yml@v1
     secrets: inherit
