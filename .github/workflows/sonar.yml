@@ -20,6 +20,6 @@ jobs:
     uses: onecx/ci-angular/.github/workflows/angular-sonar-main.yml@v1
     secrets: inherit
   sonar-pr:
-    if: (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') || github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     uses: onecx/ci-angular/.github/workflows/angular-pr-sonar.yml@v1
     secrets: inherit
