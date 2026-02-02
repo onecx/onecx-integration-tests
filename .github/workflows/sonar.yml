@@ -38,7 +38,8 @@ permissions:
   actions: read
 
 jobs:
-  sonar-test:
+  sonar-pr-test:
+    if: github.event_name == 'pull_request'
     uses: onecx/ci-angular/.github/workflows/angular-pr-sonar.yml@v1
     with:
       artifact: coverage-reports
