@@ -1,23 +1,44 @@
+# name: Sonar
+# on:
+#   push:
+#     branches:
+#       - main
+#   workflow_run:
+#     workflows: ['On PR']
+#     types:
+#       - completed
+#   workflow_dispatch:
+# permissions:
+#   contents: read
+#   pull-requests: write
+#   actions: read
+# jobs:
+#   sonar-main:
+#     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+#     uses: onecx/ci-angular/.github/workflows/angular-sonar-main.yml@v1
+#     secrets: inherit
+#   sonar-pr:
+#     if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+#     uses: onecx/ci-angular/.github/workflows/angular-pr-sonar.yml@v1
+#     with:
+#       artifact: coverage-reports
+#     secrets: inherit
+
 name: Sonar
+
 on:
-  push:
-    branches:
-      - main
-  workflow_run:
-    workflows: ['On PR']
-    types:
-      - completed
+  pull_request:
+    branches: [sonar-integrate]
+
   workflow_dispatch:
+
 permissions:
   contents: read
   pull-requests: write
+  actions: read
+
 jobs:
-  sonar-main:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    uses: onecx/ci-angular/.github/workflows/angular-sonar-main.yml@v1
-    secrets: inherit
-  sonar-pr:
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+  sonar-test:
     uses: onecx/ci-angular/.github/workflows/angular-pr-sonar.yml@v1
     with:
       artifact: coverage-reports
