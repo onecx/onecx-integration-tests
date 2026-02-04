@@ -1,9 +1,9 @@
-name: Run Sonar on Main
+name: Sonar on Main
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 15 * * SUN'
+    - cron: '0 2 * * *' # once per night
 
 permissions:
   contents: read
