@@ -143,3 +143,5 @@ vite.config.ts.timestamp-*
 .vscode/extensions.json
 
 reports
+
+e2e-results
