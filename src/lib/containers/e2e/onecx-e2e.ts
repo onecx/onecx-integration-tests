@@ -1,11 +1,9 @@
 import { GenericContainer, StartedTestContainer, AbstractStartedContainer, Wait } from 'testcontainers'
 import Dockerode from 'dockerode'
-import { E2eContainerInterface } from '../../models/e2e.interface'
 import { HealthCheckableContainer } from '../../models/health-checkable-container.interface'
 import { HealthCheckExecutor } from '../../models/health-check-executor.interface'
 import { SkipHealthCheckExecutor } from '../../utils/health-check-executor'
 import { getE2eOutputPath, E2E_CONTAINER_OUTPUT_PATH } from '../../config/e2e-constants'
-import { Logger } from '../../utils/logger'
 
 /**
  * E2E test container that runs playwright/cypress tests against the platform.
@@ -101,7 +99,7 @@ export class StartedE2eContainer extends AbstractStartedContainer implements Hea
       const dockerContainer = dockerode.getContainer(this.getId())
       const inspectData = await dockerContainer.inspect()
       return inspectData.State.ExitCode
-    } catch (error) {
+    } catch {
       return 1 // Return error code if inspection fails
     }
   }
