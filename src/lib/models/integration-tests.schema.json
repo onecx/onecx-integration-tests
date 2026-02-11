@@ -111,6 +111,10 @@
           "items": {
             "$ref": "#/definitions/uiContainer"
           }
+        },
+        "e2e": {
+          "$ref": "#/definitions/e2eContainer",
+          "description": "E2E test container (e.g., Playwright)"
         }
       }
     },
@@ -346,6 +350,23 @@
           "required": ["uiDetails"]
         }
       ]
+    },
+    "e2eContainer": {
+      "type": "object",
+      "description": "E2E test container configuration (e.g., Playwright)",
+      "properties": {
+        "image": {
+          "$ref": "#/definitions/dockerImage"
+        },
+        "networkAlias": {
+          "$ref": "#/definitions/networkAlias"
+        },
+        "baseUrl": {
+          "type": "string",
+          "description": "Base URL for E2E tests (e.g., http://onecx-shell:8080/<BASEHREF>/)."
+        }
+      },
+      "required": ["image", "networkAlias"]
     }
   }
 }

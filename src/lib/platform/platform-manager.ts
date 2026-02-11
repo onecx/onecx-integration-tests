@@ -2,6 +2,7 @@ import { Network, StartedNetwork } from 'testcontainers'
 import { StartedOnecxKeycloakContainer } from '../containers/core/onecx-keycloak'
 import { CONTAINER } from '../models/container.enum'
 import { PlatformConfig } from '../models/platform-config.interface'
+import { E2eResult } from '../models/e2e.interface'
 import { DEFAULT_PLATFORM_CONFIG } from '../config/default-platform-config'
 import { ImageResolver } from './image-resolver'
 import { HealthChecker } from './health-checker'
@@ -9,11 +10,13 @@ import { CoreContainerStarter } from './core-container-starter'
 import { UserDefinedContainerStarter } from './user-defined-container-starter'
 import { DataImporter } from './data-importer'
 import type { AllowedContainerTypes } from '../models/allowed-container.types'
-import { HealthCheckResult } from '../models/health-checker.interface'
+import { ContainerHealthStatus } from '../models/health-checker.interface'
 import { Logger, LogMessages } from '../utils/logger'
 import { PlatformConfigJsonValidator } from './json-validator'
 import { StartedOnecxPostgresContainer } from '../containers/core/onecx-postgres'
 import { ContainerRegistry } from './container-registry'
+import { PlatformInfoExporter } from './platform-info-exporter'
+import { PlatformInfo } from '../models/platform-info-exporter.interface'
 
 const logger = new Logger('PlatformManager')
 
@@ -34,6 +37,7 @@ export class PlatformManager {
   private healthChecker?: HealthChecker
   private jsonValidator: PlatformConfigJsonValidator
   private validatedConfig?: PlatformConfig
+  private platformInfoExporter?: PlatformInfoExporter
 
   constructor(configFilePath?: string) {
     this.jsonValidator = new PlatformConfigJsonValidator()
@@ -44,7 +48,7 @@ export class PlatformManager {
    * Orchestrates the startup of the default services and the creation of user-defined containers.
    * @param config Optional config override. If not provided, uses validated config from constructor or default config
    */
-  async startContainers(config?: PlatformConfig) {
+  async startContainers(config?: PlatformConfig): Promise<void> {
     // Use validated config from constructor if available, otherwise use provided config or default
     const finalConfig = config || this.validatedConfig || DEFAULT_PLATFORM_CONFIG
 
@@ -107,6 +111,11 @@ export class PlatformManager {
 
     // Start heartbeat monitoring if configured
     this.healthChecker.startHeartbeat(this.containerRegistry.getAllContainers())
+
+    // Initialize exporter after all containers are started
+    if (this.network) {
+      this.platformInfoExporter = new PlatformInfoExporter(this.containerRegistry, this.network)
+    }
   }
 
   /**
@@ -133,7 +142,7 @@ export class PlatformManager {
   /**
    * Check the health of all running containers
    */
-  async checkAllHealthy(): Promise<HealthCheckResult[]> {
+  async checkAllHealthy(): Promise<ContainerHealthStatus[]> {
     if (!this.healthChecker) {
       throw new Error('HealthChecker not initialized. Call startContainers first.')
     }
@@ -145,7 +154,7 @@ export class PlatformManager {
    * @param containerName
    * @returns
    */
-  async checkHealthy(containerName: string): Promise<HealthCheckResult> {
+  async checkHealthy(containerName: string): Promise<ContainerHealthStatus> {
     if (!this.healthChecker) {
       throw new Error('HealthChecker not initialized. Call startContainers first.')
     }
@@ -260,6 +269,59 @@ export class PlatformManager {
     this.containerRegistry.clear()
   }
 
+  /**
+   * Get platform info exporter for URL access
+   */
+  getInfoExporter(): PlatformInfoExporter | undefined {
+    return this.platformInfoExporter
+  }
+
+  /**
+   * Get platform info (convenience method)
+   */
+  async getPlatformInfo(): Promise<PlatformInfo | undefined> {
+    return await this.platformInfoExporter?.getPlatformInfo()
+  }
+
+  /**
+   * Check if E2E tests are configured
+   */
+  hasE2eConfig(): boolean {
+    const config = this.validatedConfig || DEFAULT_PLATFORM_CONFIG
+    return !!config.container?.e2e
+  }
+
+  /**
+   * Run E2E tests if configured
+   * This should be called after all containers are healthy
+   * The E2E container will be started as the last container
+   * @returns E2E result with exit code, or undefined if no E2E configured
+   */
+  async runE2eTests(): Promise<E2eResult | undefined> {
+    const config = this.validatedConfig || DEFAULT_PLATFORM_CONFIG
+
+    if (!config.container?.e2e) {
+      return undefined
+    }
+
+    if (!this.UserDefinedContainerStarter) {
+      // Initialize UserDefinedContainerStarter if not already done
+      if (!this.network || !this.imageResolver) {
+        throw new Error('Network and ImageResolver must be initialized before running E2E tests')
+      }
+      const postgres = this.containerRegistry.getContainer(CONTAINER.POSTGRES) as StartedOnecxPostgresContainer
+      const keycloak = this.containerRegistry.getContainer(CONTAINER.KEYCLOAK) as StartedOnecxKeycloakContainer
+      this.UserDefinedContainerStarter = new UserDefinedContainerStarter(
+        this.network,
+        this.imageResolver,
+        this.containerRegistry,
+        postgres,
+        keycloak
+      )
+    }
+
+    return await this.UserDefinedContainerStarter.runE2eTests(config)
+  }
   /**
    * Create user-defined containers using the UserDefinedContainerStarter
    */
