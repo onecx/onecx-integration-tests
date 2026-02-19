@@ -80,7 +80,7 @@ export class UserDefinedContainerStarter {
    * @param config Platform configuration containing E2E container definition
    * @returns E2E execution result with exit code, or undefined if no E2E configured
    */
-  async runE2eTests(config: PlatformConfig): Promise<E2eResult | undefined> {
+  async startE2eContainer(config: PlatformConfig): Promise<E2eResult | undefined> {
     if (!config.container?.e2e) {
       return undefined
     }
@@ -91,12 +91,13 @@ export class UserDefinedContainerStarter {
     logger.success(LogMessages.CONTAINER_STARTED, `E2E container finished: ${e2eConfig.networkAlias}`)
     return e2eResult
   }
+
   /**
    * Create a service container from the configuration
    */
   private async createSvcContainer(
     svcConfig: SvcContainerInterface,
-    enableLogging: boolean
+    withLoggingEnabled: boolean
   ): Promise<StartedSvcContainer> {
     if (!this.postgres || !this.keycloak) {
       throw new Error('Postgres and Keycloak containers are required for service containers')
@@ -120,7 +121,7 @@ export class UserDefinedContainerStarter {
       svcContainer.withHealthCheck(svcConfig.healthCheck)
     }
 
-    return await svcContainer.enableLogging(enableLogging).withNetwork(this.network).start()
+    return await svcContainer.withLoggingEnabled(withLoggingEnabled).withNetwork(this.network).start()
   }
 
   /**
@@ -128,7 +129,7 @@ export class UserDefinedContainerStarter {
    */
   private async createBffContainer(
     bffConfig: BffContainerInterface,
-    enableLogging: boolean
+    withLoggingEnabled: boolean
   ): Promise<StartedBffContainer> {
     if (!this.keycloak) {
       throw new Error('Keycloak container is required for BFF containers but was not provided.')
@@ -148,13 +149,16 @@ export class UserDefinedContainerStarter {
       bffContainer.withEnvironment(bffConfig.environments)
     }
 
-    return await bffContainer.enableLogging(enableLogging).withNetwork(this.network).start()
+    return await bffContainer.withLoggingEnabled(withLoggingEnabled).withNetwork(this.network).start()
   }
 
   /**
    * Create a UI container from the configuration
    */
-  private async createUiContainer(uiConfig: UiContainerInterface, enableLogging: boolean): Promise<StartedUiContainer> {
+  private async createUiContainer(
+    uiConfig: UiContainerInterface,
+    withLoggingEnabled: boolean
+  ): Promise<StartedUiContainer> {
     // Resolve the image through the ImageResolver
     const resolvedImage = await this.imageResolver.getImage(uiConfig.image)
 
@@ -172,15 +176,16 @@ export class UserDefinedContainerStarter {
       uiContainer.withProductName(uiConfig.uiDetails.productName)
     }
 
-    return await uiContainer.enableLogging(enableLogging).withNetwork(this.network).start()
+    return await uiContainer.withLoggingEnabled(withLoggingEnabled).withNetwork(this.network).start()
   }
+
   /**
    * Start E2E test container and wait for it to complete
    * @param e2eConfig E2E container configuration
-   * @param enableLogging Whether to enable container logging
+   * @param withLoggingEnabled Whether to enable container logging
    * @returns E2E execution result with exit code
    */
-  async createE2eContainer(e2eConfig: E2eContainerInterface, enableLogging: boolean): Promise<E2eResult> {
+  async createE2eContainer(e2eConfig: E2eContainerInterface, withLoggingEnabled: boolean): Promise<E2eResult> {
     const startTime = Date.now()
 
     // Resolve image (may need to pull from registry)
@@ -189,10 +194,14 @@ export class UserDefinedContainerStarter {
     // Create E2E container with resolved image and config
     const e2eContainer = new E2eContainer(resolvedImage).withNetworkAliases(e2eConfig.networkAlias)
 
-    const startedContainer = await e2eContainer.enableLogging(enableLogging).withNetwork(this.network).start()
+    if (e2eConfig.baseUrl) {
+      e2eContainer.withBaseUrl(e2eConfig.baseUrl)
+    }
 
-    // With Wait.forOneShotStartup(), the container has already exited when start() completes
-    // We just need to get the exit code
+    const startedContainer = await e2eContainer.withLoggingEnabled(withLoggingEnabled).withNetwork(this.network).start()
+
+    // With the E2E one-shot completion strategy, start() resolves after container exit.
+    // We then inspect and report the real exit code.
     logger.info(LogMessages.CONTAINER_STARTED, 'E2E container finished, retrieving exit code...')
     const exitCode = await startedContainer.getExitCode()
     const duration = Date.now() - startTime

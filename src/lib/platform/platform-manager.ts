@@ -295,7 +295,7 @@ export class PlatformManager {
    * The E2E container will be started as the last container
    * @returns E2E result with exit code, or undefined if no E2E configured
    */
-  async runE2eTests(): Promise<E2eResult | undefined> {
+  async startE2eContainer(): Promise<E2eResult | undefined> {
     const config = this.validatedConfig || DEFAULT_PLATFORM_CONFIG
 
     if (!config.container?.e2e) {
@@ -318,7 +318,7 @@ export class PlatformManager {
       )
     }
 
-    return await this.UserDefinedContainerStarter.runE2eTests(config)
+    return await this.UserDefinedContainerStarter.startE2eContainer(config)
   }
 
   /**

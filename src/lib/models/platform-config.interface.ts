@@ -8,7 +8,7 @@ export interface PlatformConfig {
   /** Whether to run data import after starting services */
   importData?: boolean
   /** Whether to enable logging or not */
-  enableLogging?: boolean | string[]
+  withLoggingEnabled?: boolean | string[]
   /** Define the heartbeat config */
   heartbeat?: HeartbeatConfig
   /** Image overrides - allows testing against different images */

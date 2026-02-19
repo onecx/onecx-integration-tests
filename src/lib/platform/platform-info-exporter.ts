@@ -7,7 +7,12 @@ import { getE2eOutputPath } from '../config/e2e-constants'
 import { Logger } from '../utils/logger'
 import * as fs from 'fs'
 import { PlatformInfo, ContainerInfo } from '../models/platform-info-exporter.interface'
-import { getInternalPort, isPortAwareContainer, isE2eContainer } from '../utils/container-utils'
+import {
+  getInternalPort,
+  isPortAwareContainer,
+  isE2eContainer,
+  getPlatformInfoExportDecision,
+} from '../utils/container-utils'
 
 const logger = new Logger('PlatformInfoExporter')
 
@@ -86,8 +91,9 @@ export class PlatformInfoExporter {
     const allContainers = this.containerRegistry.getAllContainers()
 
     for (const [name, container] of allContainers) {
-      if (isE2eContainer(container)) {
-        logger.info('CONTAINER_SKIPPED', `${name} - E2E runner has no service port mapping`)
+      const exportDecision = getPlatformInfoExportDecision(container)
+      if (!exportDecision.include) {
+        logger.info('CONTAINER_SKIPPED', `${name} - ${exportDecision.reason ?? 'Skipped by export policy'}`)
         continue
       }
 
@@ -95,8 +101,6 @@ export class PlatformInfoExporter {
         infos[name] = await this.buildContainerInfo(name, container)
         continue
       }
-
-      logger.info('CONTAINER_SKIPPED', `${name} - Container does not expose getPort()`)
     }
 
     return infos

@@ -14,7 +14,7 @@ const logger = new Logger('E2E')
  *   npm run e2e -- --config=./path/to/config.json
  *   CONFIG_PATH=./config.json npm run e2e
  */
-async function main(): Promise<void> {
+async function main(): Promise<number> {
   const configPath = getConfigPath()
 
   if (configPath) {
@@ -26,8 +26,10 @@ async function main(): Promise<void> {
   // Validate E2E is configured
   if (!manager.hasE2eConfig()) {
     logger.error('No E2E container configured in the platform configuration')
-    process.exit(1)
+    return 1
   }
+
+  let exitCode = 1
 
   try {
     // Start platform
@@ -35,7 +37,7 @@ async function main(): Promise<void> {
     await manager.startContainers()
 
     // Export platform info
-    manager.getInfoExporter()?.exportAll()
+    await manager.getInfoExporter()?.exportAll()
 
     // Wait for health
     logger.info('Waiting for all services to be healthy...')
@@ -44,7 +46,7 @@ async function main(): Promise<void> {
 
     // Run E2E (last container)
     logger.info('Starting E2E tests...')
-    const result = await manager.runE2eTests()
+    const result = await manager.startE2eContainer()
 
     if (result) {
       logger.info('═'.repeat(70))
@@ -52,20 +54,22 @@ async function main(): Promise<void> {
       logger.info(`Exit Code: ${result.exitCode}`)
       logger.info(`Duration:  ${Math.round(result.duration / 1000)}s`)
       logger.info('═'.repeat(70))
+      exitCode = result.exitCode
+    } else {
+      exitCode = 1
     }
-
-    // Shutdown and exit with E2E result
-    await manager.stopAllContainers()
-    process.exit(result?.exitCode ?? 1)
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error)
     logger.error('E2E execution failed', errorMessage)
+    exitCode = 1
+  } finally {
     await manager.stopAllContainers().catch((stopError) => {
       const stopMessage = stopError instanceof Error ? stopError.message : String(stopError)
       logger.warn('Failed to stop containers after E2E failure', stopMessage)
     })
-    process.exit(1)
   }
+
+  return exitCode
 }
 
 /**
@@ -85,8 +89,12 @@ function getConfigPath(): string | undefined {
   return process.env.CONFIG_PATH
 }
 
-main().catch((error) => {
-  const errorMessage = error instanceof Error ? error.message : String(error)
-  logger.error('Unexpected error', errorMessage)
-  process.exit(1)
-})
+main()
+  .then((exitCode) => {
+    process.exitCode = exitCode
+  })
+  .catch((error) => {
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    logger.error('Unexpected error', errorMessage)
+    process.exitCode = 1
+  })

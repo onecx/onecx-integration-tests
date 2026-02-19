@@ -2,7 +2,7 @@
   "$schema": "../src/lib/models/integration-tests.schema.json",
   "platformConfig": {
     "importData": true,
-    "enableLogging": true,
+    "withLoggingEnabled": true,
     "heartbeat": { "enabled": true },
     "container": {
       "e2e": {

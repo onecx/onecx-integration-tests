@@ -19,7 +19,7 @@
           "description": "Whether to run data import after starting services",
           "default": true
         },
-        "enableLogging": {
+        "withLoggingEnabled": {
           "oneOf": [
             {
               "type": "boolean",
@@ -84,10 +84,6 @@
         },
         "ui": {
           "$ref": "#/definitions/uiOverrides"
-        },
-        "e2e": {
-          "$ref": "#/definitions/e2eContainer",
-          "description": "E2E test container (e.g., Playwright)"
         }
       }
     },
@@ -117,11 +113,8 @@
           }
         },
         "e2e": {
-          "type": "object",
           "description": "Single e2e Container",
-          "items": {
-            "$ref": "#/definitions/e2eContainer"
-          }
+          "$ref": "#/definitions/e2eContainer"
         }
       }
     },

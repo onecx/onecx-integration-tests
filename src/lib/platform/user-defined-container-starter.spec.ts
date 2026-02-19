@@ -49,7 +49,7 @@ describe('UserDefinedContainerStarter', () => {
         withAppBaseHref: jest.fn().mockReturnThis(),
         withAppId: jest.fn().mockReturnThis(),
         withProductName: jest.fn().mockReturnThis(),
-        enableLogging: jest.fn().mockReturnThis(),
+        withLoggingEnabled: jest.fn().mockReturnThis(),
         withNetwork: jest.fn().mockReturnThis(),
         start: jest.fn().mockResolvedValue({}),
       }

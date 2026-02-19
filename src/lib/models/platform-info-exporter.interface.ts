@@ -37,3 +37,8 @@ export interface ContainerInfo {
   /** Additional note when container is skipped or has no exposed ports */
   note?: string
 }
+
+export interface PlatformInfoExportDecision {
+  include: boolean
+  reason?: string
+}

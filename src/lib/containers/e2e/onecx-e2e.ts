@@ -23,7 +23,7 @@ export class E2eContainer extends GenericContainer {
     super(image)
   }
 
-  enableLogging(log: boolean): this {
+  withLoggingEnabled(log: boolean): this {
     this.loggingEnabled = log
     return this
   }

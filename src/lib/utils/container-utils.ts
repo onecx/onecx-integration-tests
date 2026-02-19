@@ -2,6 +2,7 @@ import { StartedOnecxKeycloakContainer } from '../containers/core/onecx-keycloak
 import { StartedShellUiContainer } from '../containers/ui/onecx-shell-ui'
 import { StartedE2eContainer } from '../containers/e2e/onecx-e2e'
 import type { AllowedContainerTypes, PortAwareContainer } from '../models/allowed-container.type'
+import { PlatformInfoExportDecision } from '../models/platform-info-exporter.interface'
 
 export function isPortAwareContainer(container: AllowedContainerTypes): container is PortAwareContainer {
   return 'getPort' in container && typeof container.getPort === 'function'
@@ -30,7 +31,22 @@ export function getContainerId(container: AllowedContainerTypes): string | undef
   return undefined
 }
 
-/** Get internal port from container - tries getPort() method first, then falls back to defaults */
+/** Get internal port from a port-aware container by delegating to `getPort()`. */
 export function getInternalPort(container: PortAwareContainer): number {
   return container.getPort()
+}
+
+/**
+ * Centralized decision whether a container should be included in platform-info export.
+ */
+export function getPlatformInfoExportDecision(container: AllowedContainerTypes): PlatformInfoExportDecision {
+  if (isE2eContainer(container)) {
+    return { include: false, reason: 'E2E runner has no service port mapping' }
+  }
+
+  if (!isPortAwareContainer(container)) {
+    return { include: false, reason: 'Container does not expose getPort()' }
+  }
+
+  return { include: true }
 }

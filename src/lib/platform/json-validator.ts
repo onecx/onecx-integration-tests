@@ -15,7 +15,7 @@ export interface ValidationResult {
 export class PlatformConfigJsonValidator {
   private ajv: InstanceType<typeof Ajv>
   private readonly CONFIG_FILE_PATTERN = /integration-tests\.json$/
-  private readonly SEARCH_ROOT = process.cwd() // Use current working directory as project root
+  private readonly SEARCH_ROOT = process.cwd() // Search recursively from current working directory
   private readonly SCHEMA = 'integration-tests.schema.json'
 
   constructor() {
@@ -24,7 +24,7 @@ export class PlatformConfigJsonValidator {
 
   /**
    * Validates the integration-tests.json file against the schema
-   * @param configFilePath Optional path to config file. If not provided, searches in default location
+   * @param configFilePath Optional path to config file. If not provided, searches recursively from SEARCH_ROOT
    * @returns ValidationResult with config data if valid
    */
   validateConfigFile(configFilePath?: string): ValidationResult {
@@ -35,7 +35,7 @@ export class PlatformConfigJsonValidator {
         return {
           isValid: false,
           errors: [
-            `No valid config file found. File must be named 'integration-tests.json' or end with '.integration-tests.json' and be located anywhere in the libs/integration-tests directory.`,
+            `No valid config file found. Expected a file name matching '*integration-tests.json' (for example 'integration-tests.json') under search root: ${this.SEARCH_ROOT}.`,
           ],
         }
       }
@@ -94,7 +94,7 @@ export class PlatformConfigJsonValidator {
       }
     }
 
-    // Search recursively in the libs/integration-tests directory
+    // Search recursively from current working directory
     const foundFiles = this.findConfigFilesRecursively(this.SEARCH_ROOT)
 
     if (foundFiles.length > 0) {

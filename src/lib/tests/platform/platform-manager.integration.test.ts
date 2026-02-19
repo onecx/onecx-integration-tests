@@ -21,7 +21,7 @@ xdescribe('PlatformManager - Integration Test', () => {
   xdescribe('startContainers - Real Integration', () => {
     it('should start containers with default configuration', async () => {
       const config: PlatformConfig = {
-        enableLogging: false, // Disable logging to reduce test noise
+        withLoggingEnabled: false, // Disable logging to reduce test noise
       }
 
       // This will actually start the containers
@@ -41,7 +41,7 @@ xdescribe('PlatformManager - Integration Test', () => {
 
     it('should start containers with deault platform and custom containers', async () => {
       const config: PlatformConfig = {
-        enableLogging: true,
+        withLoggingEnabled: true,
         startDefaultSetup: true,
         container: {
           service: {
@@ -83,7 +83,7 @@ xdescribe('PlatformManager - Integration Test', () => {
 
     it('should handle complex configuration with multiple custom containers of one kind', async () => {
       const config: PlatformConfig = {
-        enableLogging: ['test-svc-1', '!test-svc-2'],
+        withLoggingEnabled: ['test-svc-1', '!test-svc-2'],
         container: {
           service: [
             {
