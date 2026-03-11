@@ -5,7 +5,7 @@ import { ImageResolver } from './image-resolver'
 import { CONTAINER } from '../models/container.enum'
 import { StartedOnecxKeycloakContainer } from '../containers/core/onecx-keycloak'
 import { StartedShellUiContainer } from '../containers/ui/onecx-shell-ui'
-import type { AllowedContainerTypes } from '../models/allowed-container.types'
+import type { AllowedContainerTypes } from '../models/allowed-container.type'
 import * as fs from 'fs'
 
 jest.mock('fs')
@@ -127,7 +127,7 @@ describe('DataImporter', () => {
 
       const mockImporterContainer = {
         withNetwork: jest.fn().mockReturnThis(),
-        enableLogging: jest.fn().mockReturnThis(),
+        withLoggingEnabled: jest.fn().mockReturnThis(),
         start: jest.fn().mockResolvedValue(mockStartedImporter),
       }
 
