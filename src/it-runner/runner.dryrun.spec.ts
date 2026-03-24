@@ -19,7 +19,7 @@ class StubPlatformRuntime implements PlatformRuntime {
   async startContainers(): Promise<void> {
     throw new Error('startContainers should not be called in dry-run')
   }
-  exportPlatformInfo(): void {
+  async exportPlatformInfo(): Promise<void> {
     /* no-op */
   }
   async checkAllHealthy(): Promise<unknown> {
