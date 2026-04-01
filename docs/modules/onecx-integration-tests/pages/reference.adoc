@@ -5,7 +5,7 @@ endif::[]
 
 = Reference
 
-== PlatformConfig
+== Platform Configuration
 
 == CLI Options
 

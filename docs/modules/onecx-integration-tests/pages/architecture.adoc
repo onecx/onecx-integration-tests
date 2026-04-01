@@ -7,6 +7,6 @@ endif::[]
 
 == What is the idea?
 
-== What is it?
+== Components
 
 == How is it working?

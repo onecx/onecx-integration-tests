@@ -12,4 +12,4 @@ endif::[]
 
 == Audience
 
-== Authoring Guidelines
+== Contributor Notes
