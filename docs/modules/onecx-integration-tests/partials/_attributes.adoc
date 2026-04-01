@@ -1,3 +1,4 @@
 :idprefix:
 :idseparator: -
+:page-pagination:
 :imagesdir: ../images
