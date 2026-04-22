@@ -3,13 +3,9 @@ include::partial$_attributes.adoc[]
 endif::[]
 :page-hide-prev:
 
-= Integration Tests
+= OneCX Integration Test Runner
 
-== Overview
-
-OneCX Integration Tests is a TypeScript-based runner that starts a OneCX platform stack with Testcontainers, validates container health, and optionally runs End-to-End (E2E) tests.
-
-The module supports local and CI execution and produces reproducible run artifacts.
+OneCX Integration Tests is a TypeScript-based CLI that uses the `testcontainers` npm library — a Node.js port of the open-source Testcontainers framework — to start and orchestrate Docker containers for a complete OneCX platform stack. It validates configuration before startup, manages the full container lifecycle, and optionally runs End-to-End (E2E) tests as the final step. The runner works in local development environments and in CI pipelines and produces reproducible, inspectable run artifacts on every execution.
 
 == Purpose
 
@@ -39,13 +35,13 @@ This documentation targets:
 
 Use this reading order:
 
-* xref:getting-started.adoc[Getting Started] for role-based onboarding
-* xref:contract.adoc[Contract and Configuration] for `platform.json`
-* xref:architecture.adoc[Architecture] for lifecycle and startup flow
-* xref:e2e.adoc[E2E Testing] for test execution and outputs
-* xref:ci.adoc[CI and GitHub Actions] for workflow automation
-* xref:ui-repository.adoc[UI Repository Integration] for caller-repository setup
-* xref:reference.adoc[Reference] for CLI, environment variables, and artifacts
+* xref:getting-started.adoc[Getting Started] for prerequisites and your first run
+* xref:contract.adoc[Platform Configuration Contract] for `platform.json` fields and validation
+* xref:architecture.adoc[Runtime Architecture and Container Lifecycle] for startup flow and design
+* xref:e2e.adoc[End-to-End Test Execution and Artifacts] for test execution and outputs
+* xref:ci.adoc[CI and GitHub Actions] for reusable workflow and run matrix
+* xref:ui-repository.adoc[Integrating a UI Repository as a Caller] for caller-repository setup
+* xref:reference.adoc[Reference: CLI, Environment Variables, and Artifacts] for all runtime controls
 
 == Contributor Notes
 

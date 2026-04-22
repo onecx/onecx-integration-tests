@@ -2,9 +2,11 @@ ifdef::env-site[]
 include::partial$_attributes.adoc[]
 endif::[]
 
-= Architecture
+= Runtime Architecture and Container Lifecycle
 
-== What is the idea?
+This page describes the internal design of the integration test runner: its layered module structure, the responsibilities of each layer, and the deterministic container startup sequence. Understanding this architecture helps contributors extend or debug the runner. The design separates configuration validation, image resolution, orchestration, and execution into independent modules so that each concern is testable and replaceable.
+
+== Design Goals
 
 The repository provides a layered integration-test runtime for OneCX.
 
@@ -59,7 +61,7 @@ This separation keeps test runs reproducible and easier to debug.
 | Export URLs and network metadata to run artifacts
 |===
 
-== How is it working?
+== Startup Sequence and Lifecycle
 
 The runtime flow is deterministic and follows startup dependencies.
 

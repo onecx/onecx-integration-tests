@@ -2,7 +2,9 @@ ifdef::env-site[]
 include::partial$_attributes.adoc[]
 endif::[]
 
-= E2E
+= End-to-End Test Execution and Artifacts
+
+This page explains how to configure and trigger E2E test execution, what platform metadata the runner exports for use inside tests, and where results are written after the E2E container exits. E2E execution is entirely configuration-driven through `platform.json`; no additional CLI arguments are required once the E2E container image is available.
 
 == Overview
 

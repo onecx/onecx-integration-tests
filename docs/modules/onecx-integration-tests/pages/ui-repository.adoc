@@ -2,7 +2,9 @@ ifdef::env-site[]
 include::partial$_attributes.adoc[]
 endif::[]
 
-= UI Repository
+= Integrating a UI Repository as a Caller
+
+UI repositories act as callers: they provide a `platform.json` configuration and an `integration/e2e/` directory containing Playwright tests, and they delegate platform bootstrap, health validation, and artifact handling to this runner. This page explains the required directory layout, the configuration the runner expects from the caller, and a pre-pull-request integration checklist.
 
 == Overview
 

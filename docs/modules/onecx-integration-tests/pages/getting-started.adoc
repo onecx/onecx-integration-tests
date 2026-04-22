@@ -2,7 +2,9 @@ ifdef::env-site[]
 include::partial$_attributes.adoc[]
 endif::[]
 
-= Getting Started
+= Getting Started: Prerequisites and First Run
+
+This page is the entry point for new users. It lists the required tools, walks through the first-run checklist, and provides role-based reading paths that direct each audience to the most relevant chapters. Complete the checklist before consulting any other page.
 
 == Contract
 

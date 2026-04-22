@@ -2,7 +2,9 @@ ifdef::env-site[]
 include::partial$_attributes.adoc[]
 endif::[]
 
-= CI
+= Continuous Integration with GitHub Actions
+
+This page documents the GitHub Actions reusable workflow included in this repository and its `workflow_call` interface for caller repositories. It describes the supported triggers, expected inputs, artifact outputs, and the run matrix that defines which image versions are used in each execution context.
 
 == Overview
 

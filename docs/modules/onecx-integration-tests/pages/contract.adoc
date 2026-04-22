@@ -2,7 +2,9 @@ ifdef::env-site[]
 include::partial$_attributes.adoc[]
 endif::[]
 
-= Contract
+= Platform Configuration Contract (`platform.json`)
+
+The runner derives all startup behavior from a single JSON file, `platform.json`. This page describes every supported field, its type, accepted values, and how validation is enforced. Validation uses AJV at startup and fails immediately on any missing or invalid value, so configuration errors are reported before any container is started.
 
 == Overview
 
