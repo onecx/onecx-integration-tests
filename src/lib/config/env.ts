@@ -1,5 +1,5 @@
 const DOCKER_REPO = 'ghcr.io/onecx'
-const DEFAULT_TAG = 'main-native'
+const DEFAULT_TAG = 'main'
 
 // External Images
 export const POSTGRES = 'docker.io/library/postgres:17.9'
