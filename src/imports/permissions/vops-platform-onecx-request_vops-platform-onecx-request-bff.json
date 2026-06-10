@@ -1,0 +1,21 @@
+{
+  "name": "vops-platform-onecx-request-bff",
+  "permissions": [
+    {
+      "resource": "vopsRequest",
+      "action": "read"
+    },
+    {
+      "resource": "vopsRequest",
+      "action": "write"
+    },
+    {
+      "resource": "vopsRequest",
+      "action": "delete"
+    },
+    {
+      "resource": "product",
+      "action": "read"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "version": "xxx",
+  "description": "vops platform onecx request",
+  "imageUrl": "",
+  "iconName": "pi-briefcase",
+  "displayName": "vops platform onecx request",
+  "basePath": "/vops-platform-onecx-request",
+  "multitenancy": true,
+  "undeployed": false
+}

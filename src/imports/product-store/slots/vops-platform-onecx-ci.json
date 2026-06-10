@@ -1,0 +1,25 @@
+[
+  {
+    "appId": "vops-platform-onecx-ci-ui",
+    "slots": [
+      {
+        "description": "Create Request button to trigger the create-request dialog",
+        "name": "ci-create-request",
+        "deprecated": false,
+        "undeployed": false
+      },
+      {
+        "description": "Quick Actions Panel",
+        "name": "quick-actions-panel",
+        "deprecated": false,
+        "undeployed": false
+      },
+      {
+        "description": "Show Requests Tab",
+        "name": "show-requests-tab",
+        "deprecated": false,
+        "undeployed": false
+      }
+    ]
+  }
+]

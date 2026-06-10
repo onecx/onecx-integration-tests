@@ -9,7 +9,9 @@ import { ProductStoreSvcContainer } from '../containers/svc/onecx-product-store-
 import { IamKcContainer } from '../containers/svc/onecx-iam-kc-svc'
 import { PermissionSvcContainer } from '../containers/svc/onecx-permission-svc'
 import { ShellBffContainer } from '../containers/bff/onecx-shell-bff'
+import { WorkspaceBffContainer } from '../containers/bff/onecx-workspace-bff'
 import { ShellUiContainer } from '../containers/ui/onecx-shell-ui'
+import { WorkspaceUiContainer } from '../containers/ui/onecx-workspace-ui'
 import { StartedSvcContainer } from '../containers/basic/onecx-svc'
 import { CONTAINER } from '../models/enums/container.enum'
 import { PlatformConfig } from '../models/interfaces/platform-config.interface'
@@ -71,6 +73,7 @@ export class CoreContainerStarter {
    */
   async startBffContainers(keycloak: StartedOnecxKeycloakContainer): Promise<void> {
     await this.startShellBffService(keycloak)
+    await this.startWorkspaceBffService(keycloak)
   }
 
   /**
@@ -78,6 +81,7 @@ export class CoreContainerStarter {
    */
   async startUiContainers(keycloak: StartedOnecxKeycloakContainer): Promise<void> {
     await this.startShellUiService(keycloak)
+    await this.startWorkspaceUiService(keycloak)
   }
 
   // Private methods for starting individual services
@@ -200,6 +204,15 @@ export class CoreContainerStarter {
     this.containerRegistry.addContainer(CONTAINER.SHELL_BFF, container)
   }
 
+  private async startWorkspaceBffService(keycloak: StartedOnecxKeycloakContainer): Promise<void> {
+    const workspaceBffImage = await this.imageResolver.getBffImage(OnecxBff.WORKSPACE_BFF, this.config)
+    const container = await new WorkspaceBffContainer(workspaceBffImage, keycloak)
+      .withNetwork(this.network)
+      .withLoggingEnabled(loggingEnabled(this.config, [CONTAINER.WORKSPACE_BFF]))
+      .start()
+    this.containerRegistry.addContainer(CONTAINER.WORKSPACE_BFF, container)
+  }
+
   private async startShellUiService(keycloak: StartedOnecxKeycloakContainer): Promise<void> {
     // Shell UI depends on Shell BFF
     const shellBffContainer = this.containerRegistry.getContainer(CONTAINER.SHELL_BFF)
@@ -213,5 +226,20 @@ export class CoreContainerStarter {
       .withLoggingEnabled(loggingEnabled(this.config, [CONTAINER.SHELL_UI]))
       .start()
     this.containerRegistry.addContainer(CONTAINER.SHELL_UI, container)
+  }
+
+  private async startWorkspaceUiService(keycloak: StartedOnecxKeycloakContainer): Promise<void> {
+    // Workspace UI depends on Workspace BFF
+    const workspaceBffContainer = this.containerRegistry.getContainer(CONTAINER.WORKSPACE_BFF)
+    if (!workspaceBffContainer) {
+      throw new Error('Workspace UI requires Workspace BFF to be started first')
+    }
+
+    const workspaceUiImage = await this.imageResolver.getUiImage(OnecxUi.WORKSPACE_UI, this.config)
+    const container = await new WorkspaceUiContainer(workspaceUiImage, keycloak)
+      .withNetwork(this.network)
+      .withLoggingEnabled(loggingEnabled(this.config, [CONTAINER.WORKSPACE_UI]))
+      .start()
+    this.containerRegistry.addContainer(CONTAINER.WORKSPACE_UI, container)
   }
 }

@@ -34,6 +34,7 @@ export class ContainerImageOverrideMapper {
 
     const overrideMap: Record<OnecxBff, string | undefined> = {
       [OnecxBff.SHELL_BFF]: overrides.shell?.image,
+      [OnecxBff.WORKSPACE_BFF]: overrides.workspace?.image,
     }
 
     return overrideMap[bffService]
@@ -48,6 +49,7 @@ export class ContainerImageOverrideMapper {
 
     const overrideMap: Record<OnecxUi, string | undefined> = {
       [OnecxUi.SHELL_UI]: overrides.shell?.image,
+      [OnecxUi.WORKSPACE_UI]: overrides.workspace?.image,
     }
 
     return overrideMap[uiService]

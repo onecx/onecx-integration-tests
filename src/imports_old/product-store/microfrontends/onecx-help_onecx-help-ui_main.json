@@ -1,0 +1,16 @@
+{
+  "appVersion": "xxx",
+  "appName": "OneCX Help UI",
+  "description": "OneCX Help UI",
+  "contact": "onecx@1000kit.org",
+  "remoteBaseUrl": "/mfe/help/",
+  "remoteEntry": "/mfe/help/remoteEntry.js",
+  "note": "Import via MF operator",
+  "exposedModule": "./OneCXHelpModule",
+  "technology": "WEBCOMPONENTMODULE",
+  "remoteName": "onecx-help",
+  "tagName": "ocx-help-component",
+  "type": "MODULE",
+  "deprecated": false,
+  "undeployed": false
+}

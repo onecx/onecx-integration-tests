@@ -29,13 +29,15 @@ export interface PlatformConfig {
       productStore?: { image?: string }
       permission?: { image?: string }
     }
-    /** BFF shell service images */
+    /** BFF service images */
     bff?: {
       shell?: { image?: string }
+      workspace?: { image?: string }
     }
-    /** UI shell service images */
+    /** UI service images */
     ui?: {
       shell?: { image?: string }
+      workspace?: { image?: string }
     }
   }
   container?: {

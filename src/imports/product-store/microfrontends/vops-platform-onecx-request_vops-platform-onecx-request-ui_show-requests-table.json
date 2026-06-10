@@ -1,0 +1,15 @@
+{
+  "appVersion": "xxx",
+  "appName": "vops-platform-onecx-request-ui",
+  "description": "OneCX ShowRequestsTableComponent",
+  "remoteBaseUrl": "/mfe/vops-platform-onecx-request/",
+  "remoteEntry": "/mfe/vops-platform-onecx-request/remoteEntry.js",
+  "note": "Imported MFE",
+  "exposedModule": "./ShowRequestsTableComponent",
+  "technology": "WEBCOMPONENTMODULE",
+  "remoteName": "vops-platform-onecx-request-ui",
+  "tagName": "show-requests-table-component",
+  "type": "COMPONENT",
+  "deprecated": false,
+  "undeployed": false
+}

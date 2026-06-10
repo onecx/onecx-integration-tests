@@ -9,6 +9,8 @@ export enum CONTAINER {
   PRODUCT_STORE_SVC = 'onecx-product-store-svc',
   PERMISSION_SVC = 'onecx-permission-svc',
   SHELL_BFF = 'onecx-shell-bff',
+  WORKSPACE_BFF = 'onecx-workspace-bff',
   SHELL_UI = 'onecx-shell-ui',
+  WORKSPACE_UI = 'onecx-workspace-ui',
   IMPORT_MANAGER = 'importManager',
 }

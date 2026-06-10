@@ -7,7 +7,7 @@ import { StartedOnecxKeycloakContainer } from '../containers/core/onecx-keycloak
 import * as fs from 'fs'
 import * as path from 'path'
 import { StartedShellUiContainer } from '../containers/ui/onecx-shell-ui'
-import { ContainerInfo } from '../../imports/import-manager'
+import { ContainerInfo } from '../../imports_old/import-manager'
 import { PlatformConfig } from '../models/interfaces/platform-config.interface'
 import { loggingEnabled } from '../utils/logging-enable'
 import { Logger, LogMessages } from '../utils/logger'

@@ -1,0 +1,21 @@
+{
+  "appVersion": "xxx",
+  "appName": "vops-platform-onecx-ci-ui",
+  "description": "Onecx VopsPlatformOnecxCi Module",
+  "remoteBaseUrl": "/mfe/vops-platform-onecx-ci/",
+  "remoteEntry": "/mfe/vops-platform-onecx-ci/remoteEntry.js",
+  "note": "Onecx VopsPlatformOnecxCi UI module auto import via MF operator",
+  "exposedModule": "./VopsPlatformOnecxCiModule",
+  "technology": "WEBCOMPONENTMODULE",
+  "remoteName": "vops-platform-onecx-ci-ui",
+  "tagName": "vops-platform-onecx-ci-webcomponent",
+  "type": "MODULE",
+  "deprecated": false,
+  "undeployed": false,
+  "endpoints": [
+    {
+      "name": "details",
+      "path": "/ci/details/{id}"
+    }
+  ]
+}

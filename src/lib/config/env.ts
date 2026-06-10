@@ -18,8 +18,10 @@ export enum OnecxService {
 
 export enum OnecxBff {
   SHELL_BFF = `${DOCKER_REPO}/onecx-shell-bff:${DEFAULT_TAG}`,
+  WORKSPACE_BFF = `${DOCKER_REPO}/onecx-workspace-bff:${DEFAULT_TAG}`,
 }
 
 export enum OnecxUi {
-  SHELL_UI = `${DOCKER_REPO}/onecx-shell-ui:main`,
+  SHELL_UI = `${DOCKER_REPO}/onecx-shell-ui:${DEFAULT_TAG}`,
+  WORKSPACE_UI = `${DOCKER_REPO}/onecx-workspace-ui:${DEFAULT_TAG}`,
 }

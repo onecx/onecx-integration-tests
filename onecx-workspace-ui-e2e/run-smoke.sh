@@ -2,10 +2,10 @@
 set -eu
 
 BASE_URL="${BASE_URL:-http://onecx-shell-ui:8080/onecx-shell/}"
-WORKSPACE_HEALTH_URL="${WORKSPACE_HEALTH_URL:-http://onecx-workspace-svc:8080/q/health}"
+WORKSPACE_SVC_HEALTH_URL="${WORKSPACE_SVC_HEALTH_URL:-http://onecx-workspace-svc:8080/q/health}"
 WORKSPACE_BFF_HEALTH_URL="${WORKSPACE_BFF_HEALTH_URL:-http://onecx-workspace-bff:8080/q/health}"
 OUT_DIR="/e2e-results"
-OUT_FILE="$OUT_DIR/workspace-smoke.json"
+OUT_FILE="$OUT_DIR/onecx-workspace-ui-e2e.json"
 
 mkdir -p "$OUT_DIR"
 
@@ -37,7 +37,7 @@ check_url() {
 STATUS="success"
 EXIT_CODE=0
 
-if ! check_url "workspace-health" "$WORKSPACE_HEALTH_URL" 30 2; then
+if ! check_url "workspace-health" "$WORKSPACE_SVC_HEALTH_URL" 30 2; then
   STATUS="failure"
   EXIT_CODE=1
 fi
@@ -56,7 +56,7 @@ cat > "$OUT_FILE" <<EOF
 {
   "status": "$STATUS",
   "baseUrl": "$BASE_URL",
-  "workspaceHealthUrl": "$WORKSPACE_HEALTH_URL",
+  "workspaceHealthUrl": "$WORKSPACE_SVC_HEALTH_URL",
   "workspaceBffHealthUrl": "$WORKSPACE_BFF_HEALTH_URL",
   "timestamp": "$(timestamp)"
 }

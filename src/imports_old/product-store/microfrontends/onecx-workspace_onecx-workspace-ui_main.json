@@ -1,0 +1,22 @@
+{
+  "appVersion": "xxx",
+  "appName": "OneCX Workspace UI",
+  "description": "OneCX Workspace UI",
+  "contact": "onecx@1000kit.org",
+  "remoteBaseUrl": "/mfe/workspace/",
+  "remoteEntry": "/mfe/workspace/remoteEntry.js",
+  "note": "Import via MF operator",
+  "exposedModule": "./OneCXWorkspaceModule",
+  "technology": "WEBCOMPONENTMODULE",
+  "remoteName": "onecx-workspace",
+  "tagName": "ocx-workspace-component",
+  "type": "MODULE",
+  "deprecated": false,
+  "undeployed": false,
+  "endpoints": [
+    {
+      "name": "workspace-detail",
+      "path": "/{workspace-name}"
+    }
+  ]
+}

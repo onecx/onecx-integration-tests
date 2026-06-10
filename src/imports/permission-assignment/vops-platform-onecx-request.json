@@ -1,0 +1,13 @@
+{
+  "id": "onecx-local-env_import-permission-assignments_vops-platform-onecx-request",
+  "assignments": {
+    "vops-platform-onecx-request": {
+      "vops-platform-onecx-request-bff": {
+        "onecx-admin": {
+          "vopsRequest": ["read", "write", "delete"],
+          "product": ["read"]
+        }
+      }
+    }
+  }
+}

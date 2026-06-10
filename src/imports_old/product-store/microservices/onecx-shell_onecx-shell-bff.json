@@ -1,0 +1,6 @@
+{
+  "version": "xxx",
+  "name": "onecx-shell-bff",
+  "description": "OneCX Shell Backend For Frontend",
+  "type": "bff"
+}

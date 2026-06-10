@@ -177,6 +177,9 @@
       "properties": {
         "shell": {
           "$ref": "#/definitions/imageOverride"
+        },
+        "workspace": {
+          "$ref": "#/definitions/imageOverride"
         }
       },
       "additionalProperties": {
@@ -188,6 +191,9 @@
       "description": "UI service image overrides",
       "properties": {
         "shell": {
+          "$ref": "#/definitions/imageOverride"
+        },
+        "workspace": {
           "$ref": "#/definitions/imageOverride"
         }
       },

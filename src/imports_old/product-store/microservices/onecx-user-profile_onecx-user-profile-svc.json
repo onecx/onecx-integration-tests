@@ -1,0 +1,6 @@
+{
+  "version": "xxx",
+  "name": "onecx-user-profile-svc",
+  "description": "OneCX User Profile Backend Service",
+  "type": "svc"
+}
