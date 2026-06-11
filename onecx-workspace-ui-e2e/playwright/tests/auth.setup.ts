@@ -1,4 +1,4 @@
-import { test as setup, expect } from '@playwright/test'
+import { test as setup } from '@playwright/test'
 import { KeycloakLoginHarness } from '../harnesses'
 import { outputDir, baseURL, username, password } from '../env'
 import { mkdirSync } from 'node:fs'

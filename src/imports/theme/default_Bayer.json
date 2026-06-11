@@ -1,11 +1,11 @@
 {
-  "id": "00456d2e-d75d-4cb9-83c7-edb159c6711e",
+  "id": "onecx-local-env_import-themes_default-Bayer",
   "created": "2025-11-05T08:50:29.418226522Z",
   "themes": {
     "Bayer Theme": {
       "displayName": "Bayer",
       "cssFile": null,
-      "description": null,
+      "description": "Bayer Theme",
       "assetsUrl": null,
       "logoUrl": null,
       "smallLogoUrl": null,

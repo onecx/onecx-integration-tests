@@ -1,0 +1,44 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "manual:onecx-stack",
+      "type": "shell",
+      "command": "npx",
+      "args": ["tsx", ".vscode/manual-stack.ts"],
+      "isBackground": true,
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "manual:docker-ports",
+      "type": "shell",
+      "command": "docker",
+      "args": ["ps", "--format", "table {{.Names}}\t{{.Ports}}"],
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "manual:docker-aliases",
+      "type": "shell",
+      "command": "docker ps -q | xargs docker inspect --format '{{.Name}} {{range $name, $network := .NetworkSettings.Networks}}{{json $network.Aliases}}{{end}} {{json .NetworkSettings.Ports}}'",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "manual:stop-onecx-stack",
+      "type": "shell",
+      "command": "docker ps -q | xargs -r docker inspect --format '{{.Id}} {{range $name, $network := .NetworkSettings.Networks}}{{json $network.Aliases}}{{end}}' | awk '/onecx-|keycloak-app|postgresdb/ {print $1}' | xargs -r docker stop",
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "manual:check-keycloak-url",
+      "type": "shell",
+      "command": "curl",
+      "args": ["-I", "http://localhost:18080/realms/onecx/.well-known/openid-configuration"],
+      "problemMatcher": [],
+      "group": "build"
+    }
+  ]
+}
