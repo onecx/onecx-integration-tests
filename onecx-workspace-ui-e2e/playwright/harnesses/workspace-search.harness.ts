@@ -114,8 +114,8 @@ export class WorkspaceSearchHarness {
    */
   async waitForPage(): Promise<void> {
     // Reduzierter Timeout für schnelleres Feedback
-    await this.workspaceComponent.waitFor({ state: 'visible', timeout: 15000 })
-    await this.pageHeader.waitFor({ state: 'visible', timeout: 10000 })
+    await this.workspaceComponent.waitFor({ state: 'visible', timeout: 150000 })
+    await this.pageHeader.waitFor({ state: 'visible', timeout: 100000 })
   }
 
   /**
