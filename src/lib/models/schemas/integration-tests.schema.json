@@ -148,6 +148,9 @@
         "iamKc": {
           "$ref": "#/definitions/imageOverride"
         },
+        "parameter": {
+          "$ref": "#/definitions/imageOverride"
+        },
         "workspace": {
           "$ref": "#/definitions/imageOverride"
         },
@@ -175,6 +178,9 @@
       "type": "object",
       "description": "BFF service image overrides",
       "properties": {
+        "parameter": {
+          "$ref": "#/definitions/imageOverride"
+        },
         "shell": {
           "$ref": "#/definitions/imageOverride"
         },

@@ -208,6 +208,7 @@ export class DataImporter {
       [CONTAINER.THEME_SVC]: 'onecx-theme-svc',
       [CONTAINER.PRODUCT_STORE_SVC]: 'onecx-product-store-svc',
       [CONTAINER.PERMISSION_SVC]: 'onecx-permission-svc',
+      [CONTAINER.PARAMETER_SVC]: 'onecx-parameter-svc',
       [CONTAINER.WORKSPACE_SVC]: 'onecx-workspace-svc',
     }
 

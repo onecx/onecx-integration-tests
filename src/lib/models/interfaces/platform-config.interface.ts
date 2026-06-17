@@ -22,6 +22,7 @@ export interface PlatformConfig {
     /** Backend service images */
     services?: {
       iamKc?: { image?: string }
+      parameter?: { image?: string }
       workspace?: { image?: string }
       userProfile?: { image?: string }
       theme?: { image?: string }
@@ -31,6 +32,7 @@ export interface PlatformConfig {
     }
     /** BFF service images */
     bff?: {
+      parameter?: { image?: string }
       shell?: { image?: string }
       workspace?: { image?: string }
     }

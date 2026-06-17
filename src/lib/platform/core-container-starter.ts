@@ -2,6 +2,7 @@ import { StartedNetwork } from 'testcontainers'
 import { OnecxKeycloakContainer, StartedOnecxKeycloakContainer } from '../containers/core/onecx-keycloak'
 import { OnecxPostgresContainer, StartedOnecxPostgresContainer } from '../containers/core/onecx-postgres'
 import { WorkspaceSvcContainer } from '../containers/svc/onecx-workspace-svc'
+import { ParameterSvcContainer } from '../containers/svc/onecx-parameter-svc'
 import { UserProfileSvcContainer } from '../containers/svc/onecx-user-profile-svc'
 import { ThemeSvcContainer } from '../containers/svc/onecx-theme-svc'
 import { TenantSvcContainer } from '../containers/svc/onecx-tenant-svc'
@@ -9,6 +10,7 @@ import { ProductStoreSvcContainer } from '../containers/svc/onecx-product-store-
 import { IamKcContainer } from '../containers/svc/onecx-iam-kc-svc'
 import { PermissionSvcContainer } from '../containers/svc/onecx-permission-svc'
 import { ShellBffContainer } from '../containers/bff/onecx-shell-bff'
+import { ParameterBffContainer } from '../containers/bff/onecx-parameter-bff'
 import { WorkspaceBffContainer } from '../containers/bff/onecx-workspace-bff'
 import { ShellUiContainer } from '../containers/ui/onecx-shell-ui'
 import { WorkspaceUiContainer } from '../containers/ui/onecx-workspace-ui'
@@ -55,6 +57,8 @@ export class CoreContainerStarter {
   ): Promise<void> {
     await this.startIamKcService(keycloak)
 
+    await this.startParameterService(postgres, keycloak)
+
     await this.startWorkspaceService(postgres, keycloak)
 
     await this.startUserProfileService(postgres, keycloak)
@@ -73,6 +77,7 @@ export class CoreContainerStarter {
    */
   async startBffContainers(keycloak: StartedOnecxKeycloakContainer): Promise<void> {
     await this.startShellBffService(keycloak)
+    await this.startParameterBffService(keycloak)
     await this.startWorkspaceBffService(keycloak)
   }
 
@@ -122,6 +127,18 @@ export class CoreContainerStarter {
       .withLoggingEnabled(loggingEnabled(this.config, [CONTAINER.WORKSPACE_SVC]))
       .start()
     this.containerRegistry.addContainer(CONTAINER.WORKSPACE_SVC, container)
+  }
+
+  private async startParameterService(
+    postgres: StartedOnecxPostgresContainer,
+    keycloak: StartedOnecxKeycloakContainer
+  ): Promise<void> {
+    const parameterImage = await this.imageResolver.getServiceImage(OnecxService.PARAMETER_SVC, this.config)
+    const container = await new ParameterSvcContainer(parameterImage, postgres, keycloak)
+      .withNetwork(this.network)
+      .withLoggingEnabled(loggingEnabled(this.config, [CONTAINER.PARAMETER_SVC]))
+      .start()
+    this.containerRegistry.addContainer(CONTAINER.PARAMETER_SVC, container)
   }
 
   private async startUserProfileService(
@@ -211,6 +228,15 @@ export class CoreContainerStarter {
       .withLoggingEnabled(loggingEnabled(this.config, [CONTAINER.WORKSPACE_BFF]))
       .start()
     this.containerRegistry.addContainer(CONTAINER.WORKSPACE_BFF, container)
+  }
+
+  private async startParameterBffService(keycloak: StartedOnecxKeycloakContainer): Promise<void> {
+    const parameterBffImage = await this.imageResolver.getBffImage(OnecxBff.PARAMETER_BFF, this.config)
+    const container = await new ParameterBffContainer(parameterBffImage, keycloak)
+      .withNetwork(this.network)
+      .withLoggingEnabled(loggingEnabled(this.config, [CONTAINER.PARAMETER_BFF]))
+      .start()
+    this.containerRegistry.addContainer(CONTAINER.PARAMETER_BFF, container)
   }
 
   private async startShellUiService(keycloak: StartedOnecxKeycloakContainer): Promise<void> {

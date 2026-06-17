@@ -8,6 +8,7 @@ export const IMPORT_MANAGER_BASE = 'docker.io/library/node:20'
 
 export enum OnecxService {
   IAM_KC_SVC = `${DOCKER_REPO}/onecx-iam-kc-svc:${DEFAULT_TAG}`,
+  PARAMETER_SVC = `${DOCKER_REPO}/onecx-parameter-svc:${DEFAULT_TAG}`,
   PERMISSION_SVC = `${DOCKER_REPO}/onecx-permission-svc:${DEFAULT_TAG}`,
   PRODUCT_STORE_SVC = `${DOCKER_REPO}/onecx-product-store-svc:${DEFAULT_TAG}`,
   TENANT_SVC = `${DOCKER_REPO}/onecx-tenant-svc:${DEFAULT_TAG}`,
@@ -17,6 +18,7 @@ export enum OnecxService {
 }
 
 export enum OnecxBff {
+  PARAMETER_BFF = `${DOCKER_REPO}/onecx-parameter-bff:${DEFAULT_TAG}`,
   SHELL_BFF = `${DOCKER_REPO}/onecx-shell-bff:${DEFAULT_TAG}`,
   WORKSPACE_BFF = `${DOCKER_REPO}/onecx-workspace-bff:${DEFAULT_TAG}`,
 }
