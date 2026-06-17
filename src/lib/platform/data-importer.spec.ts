@@ -46,10 +46,16 @@ describe('DataImporter', () => {
         getPort: jest.fn().mockReturnValue(8081),
       } as unknown as AllowedContainerTypes
 
+      const mockParameterSvc = {
+        getNetworkAliases: jest.fn().mockReturnValue(['parameter-svc']),
+        getPort: jest.fn().mockReturnValue(8082),
+      } as unknown as AllowedContainerTypes
+
       const startedContainers = new Map<string, AllowedContainerTypes>()
       startedContainers.set(CONTAINER.KEYCLOAK, mockKeycloak)
       startedContainers.set(CONTAINER.SHELL_UI, mockShellUi)
       startedContainers.set(CONTAINER.TENANT_SVC, mockTenantSvc)
+      startedContainers.set(CONTAINER.PARAMETER_SVC, mockParameterSvc)
 
       const containerInfoPath = dataImporter.createContainerInfo(startedContainers)
 
@@ -70,6 +76,11 @@ describe('DataImporter', () => {
       expect(writtenData.services['onecx-tenant-svc']).toEqual({
         alias: 'tenant-svc',
         port: 8081,
+      })
+      expect(writtenData.services).toHaveProperty('onecx-parameter-svc')
+      expect(writtenData.services['onecx-parameter-svc']).toEqual({
+        alias: 'parameter-svc',
+        port: 8082,
       })
     })
 
