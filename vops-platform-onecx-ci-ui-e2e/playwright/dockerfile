@@ -14,7 +14,7 @@ FROM mcr.microsoft.com/playwright:v1.59.1-noble
 LABEL maintainer="OneCX Team"
 LABEL description="E2E Tests für OneCX Workspace Management"
 
-WORKDIR /app
+WORKDIR /app                                       
 
 # Environment defaults — BASE_URL is set at runtime by Testcontainers
 ENV NODE_ENV=production

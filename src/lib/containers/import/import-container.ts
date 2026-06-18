@@ -38,7 +38,11 @@ export class ImportManagerContainer extends GenericContainer {
     ])
       .withCopyDirectoriesToContainer([
         {
-          source: path.resolve('src/imports'),
+          source: path.resolve('src/imports-scripts'),
+          target: '/app',
+        },
+        {
+          source: path.resolve('src/imports'), // TODO: TO BE MADE MORE DYNAMIC
           target: '/app',
         },
       ])
@@ -46,6 +50,7 @@ export class ImportManagerContainer extends GenericContainer {
         'sh',
         '-c',
         `cd app && npm install --no-audit --no-fund --prefer-offline ts-node typescript @types/node axios && npx ts-node ${this.importScript}`,
+        'cp -rn imports-scripts/. imports/',
       ])
     if (this.loggingEnabled) {
       this.withLogConsumer((stream) => {

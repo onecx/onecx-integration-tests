@@ -1,6 +1,0 @@
-{
-  "version": "dev",
-  "name": "onecx-parameter-svc",
-  "description": "OneCX Parameter Backend Service",
-  "type": "svc"
-}

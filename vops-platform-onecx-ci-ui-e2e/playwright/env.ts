@@ -23,7 +23,7 @@ function ensureOutDir(dir: string): string {
 }
 
 export const baseURL =
-  process.env.BASE_URL || 'http://onecx.localhost/onecx-shell/admin/vops-platform-onecx-ci/ci/applications'
+  process.env.BASE_URL || 'http://onecx.localhost/onecx-shell/admin/vops-platform-onecx-ci/applications'
 // Keep test URL on the same origin as auth setup unless explicitly overridden.
 export const testURL = process.env.TEST_URL || baseURL
 

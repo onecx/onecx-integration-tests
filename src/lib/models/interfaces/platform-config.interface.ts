@@ -11,6 +11,10 @@ export interface PlatformConfig {
   withLoggingEnabled?: boolean | string[]
   /** Define the heartbeat config */
   heartbeat?: HeartbeatConfig
+
+  /** Define the custom import path */
+  customImportPath?: string
+
   /** Image overrides - allows testing against different images */
   platformOverrides?: {
     /** Core service images */
