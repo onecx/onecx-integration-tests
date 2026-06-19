@@ -35,7 +35,8 @@ export class ImportManagerContainer extends GenericContainer {
   }
 
   override async start(): Promise<StartedImportManagerContainer> {
-    const importsPath = path.resolve(this.platformConfig.customImportPath ?? 'src/imports')
+    const { importsPath } = this.platformConfig.config ?? {}
+    const resolvedImportsPath = path.resolve(importsPath ?? 'src/imports')
     const scriptsPath = path.resolve('src/imports-scripts')
 
     this.withCopyFilesToContainer([
@@ -50,7 +51,7 @@ export class ImportManagerContainer extends GenericContainer {
           target: '/app',
         },
         {
-          source: importsPath,
+          source: resolvedImportsPath,
           target: '/app',
         },
       ])

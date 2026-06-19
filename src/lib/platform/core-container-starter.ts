@@ -102,7 +102,7 @@ export class CoreContainerStarter {
     postgres: StartedOnecxPostgresContainer
   ): Promise<StartedOnecxKeycloakContainer> {
     const keycloakImage = await this.imageResolver.getKeycloakImage(this.config)
-    return await new OnecxKeycloakContainer(keycloakImage, postgres)
+    return await new OnecxKeycloakContainer(keycloakImage, postgres, this.config)
       .withNetwork(this.network)
       .withLoggingEnabled(loggingEnabled(this.config, [CONTAINER.KEYCLOAK]))
       .start()

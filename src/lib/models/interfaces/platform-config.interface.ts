@@ -12,8 +12,12 @@ export interface PlatformConfig {
   /** Define the heartbeat config */
   heartbeat?: HeartbeatConfig
 
-  /** Define the custom import path */
-  customImportPath?: string
+  config?: {
+    /** Define the custom import path */
+    importsPath?: string
+    /** Define the custom realm */
+    realm?: string
+  }
 
   /** Image overrides - allows testing against different images */
   platformOverrides?: {
