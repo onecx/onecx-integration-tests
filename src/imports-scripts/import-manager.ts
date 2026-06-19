@@ -93,7 +93,7 @@ export class ImportManager {
     logger.info('IMPORT_MANAGER_START')
 
     const token = await this.getToken()
-    const base = this.resolveImportDataBaseDir()
+    const base = path.resolve(__dirname, '') //TODO: PATH INSIDE THE CONTAINER TO IMPORTS
     const { services } = this.containerInfo
 
     // Get all available services
@@ -168,24 +168,6 @@ export class ImportManager {
 
     logger.success('IMPORT_COMPLETE')
   }
-
-  private resolveImportDataBaseDir(): string {
-    const requiredDirs = ['tenant', 'theme', 'product-store', 'permissions', 'permission-assignment', 'workspace']
-    const candidates = [path.resolve(__dirname, '../imports'), path.resolve(__dirname, '')]
-
-    for (const candidate of candidates) {
-      const hasAllRequiredDirs = requiredDirs.every((dirName) => fs.existsSync(path.join(candidate, dirName)))
-      if (hasAllRequiredDirs) {
-        logger.info('SERVICES_FOUND', `Import data directory: ${candidate}`)
-        return candidate
-      }
-    }
-
-    const message = `Could not resolve import data directory. Tried: ${candidates.join(', ')}`
-    logger.error('CONFIG_FILE_NOT_FOUND', message)
-    throw new Error(message)
-  }
-
   /**
    * Retrieves an authentication token from the Keycloak service
    *

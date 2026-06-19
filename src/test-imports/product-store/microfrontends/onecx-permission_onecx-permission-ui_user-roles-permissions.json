@@ -1,0 +1,16 @@
+{
+  "appVersion": "xxx",
+  "appName": "OneCX Permission UI",
+  "description": "Show current user's roles and permissions",
+  "contact": "onecx@1000kit.org",
+  "remoteBaseUrl": "/mfe/permission/",
+  "remoteEntry": "/mfe/permission/remoteEntry.js",
+  "note": "Imported MFE",
+  "exposedModule": "./OneCXUserRolesPermissionsComponent",
+  "technology": "WEBCOMPONENTMODULE",
+  "remoteName": "onecx-permission",
+  "tagName": "ocx-user-roles-permissions-component",
+  "type": "COMPONENT",
+  "deprecated": false,
+  "undeployed": false
+}

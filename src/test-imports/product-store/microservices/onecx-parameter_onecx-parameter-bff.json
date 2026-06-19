@@ -1,0 +1,6 @@
+{
+  "version": "dev",
+  "name": "onecx-parameter-bff",
+  "description": "OneCX Parameter Backend For Frontend",
+  "type": "bff"
+}

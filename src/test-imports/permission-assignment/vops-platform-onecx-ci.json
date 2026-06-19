@@ -1,0 +1,19 @@
+{
+  "id": "onecx-local-env_import-permission-assignments_vops-platform-onecx-ci",
+  "assignments": {
+    "vops-platform-onecx-ci": {
+      "vops-platform-onecx-ci-bff": {
+        "onecx-admin": {
+          "vopsCi": [
+            "read",
+            "write",
+            "delete"
+          ],
+          "product": [
+            "read"
+          ]
+        }
+      }
+    }
+  }
+}

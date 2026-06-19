@@ -1,0 +1,16 @@
+{
+  "appVersion": "xxx",
+  "appName": "OneCX Welcome UI",
+  "description": "OneCX Welcome UI",
+  "contact": "onecx@1000kit.org",
+  "remoteBaseUrl": "/mfe/welcome/",
+  "remoteEntry": "/mfe/welcome/remoteEntry.js",
+  "note": "Import via MF operator",
+  "exposedModule": "./OneCXWelcomeModule",
+  "technology": "WEBCOMPONENTMODULE",
+  "remoteName": "onecx-welcome",
+  "tagName": "ocx-welcome-component",
+  "type": "MODULE",
+  "deprecated": false,
+  "undeployed": false
+}

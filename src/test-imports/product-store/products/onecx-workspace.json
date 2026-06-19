@@ -1,0 +1,14 @@
+{
+  "version": "xxx",
+  "description": "OneCX Workspace",
+  "imageUrl": null,
+  "iconName": "desktop",
+  "displayName": "OneCX Workspace",
+  "basePath": "/workspace",
+  "provider": "OneCX Team",
+  "classifications": [
+    "Administration"
+  ],
+  "multitenancy": true,
+  "undeployed": false
+}

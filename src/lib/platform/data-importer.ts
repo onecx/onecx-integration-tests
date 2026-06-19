@@ -47,7 +47,7 @@ export class DataImporter {
       const containerInfoPath = this.createContainerInfo(startedContainers)
 
       const importImage = await this.imageResolver.getImportManagerBaseImage(config)
-      const importer = await new ImportManagerContainer(importImage, containerInfoPath)
+      const importer = await new ImportManagerContainer(importImage, containerInfoPath, config)
         .withNetwork(network)
         .withLoggingEnabled(loggingEnabled(config, [CONTAINER.IMPORT_MANAGER]))
         .start()
