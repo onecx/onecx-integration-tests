@@ -18,8 +18,8 @@ WORKDIR /app
 
 # Environment defaults — BASE_URL is set at runtime by Testcontainers
 ENV NODE_ENV=production
-ENV USERNAME=onecx
-ENV PASSWORD=onecx
+ENV USERNAME=test
+ENV PASSWORD=test
 ENV OUTPUT_DIR=/e2e-results
 ENV CI=true
 

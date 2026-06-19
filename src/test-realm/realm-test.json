@@ -1,7 +1,7 @@
 {
-  "id": "onecx",
-  "realm": "onecx",
-  "displayName": "OneCX Realm",
+  "id": "test",
+  "realm": "test",
+  "displayName": "Test Realm",
   "displayNameHtml": "",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
@@ -49,20 +49,20 @@
     "realm": [
       {
         "id": "842d03f7-6481-4d5b-b2dd-aa1a592402ce",
-        "name": "onecx-user",
-        "description": "OneCX Viewing (read access)",
+        "name": "test-user",
+        "description": "Test Viewing (read access)",
         "composite": false,
         "clientRole": false,
-        "containerId": "onecx",
+        "containerId": "test",
         "attributes": {}
       },
       {
         "id": "7b4629c4-abe6-48b2-a8cc-daa760b0acaa",
-        "name": "onecx-admin",
-        "description": "OneCX Administration (full access)",
+        "name": "test-admin",
+        "description": "Test Administration (full access)",
         "composite": false,
         "clientRole": false,
-        "containerId": "onecx",
+        "containerId": "test",
         "attributes": {}
       },
       {
@@ -71,12 +71,12 @@
         "description": "${role_offline-access}",
         "composite": false,
         "clientRole": false,
-        "containerId": "onecx",
+        "containerId": "test",
         "attributes": {}
       },
       {
         "id": "fa32ab92-b967-4174-94e5-b6d495565ab9",
-        "name": "default-roles-onecx",
+        "name": "default-roles-test",
         "description": "${role_default-roles}",
         "composite": true,
         "composites": {
@@ -86,7 +86,7 @@
           }
         },
         "clientRole": false,
-        "containerId": "onecx",
+        "containerId": "test",
         "attributes": {}
       },
       {
@@ -95,7 +95,7 @@
         "description": "${role_uma_authorization}",
         "composite": false,
         "clientRole": false,
-        "containerId": "onecx",
+        "containerId": "test",
         "attributes": {}
       }
     ],
@@ -411,11 +411,11 @@
   "groups": [],
   "defaultRole": {
     "id": "fa32ab92-b967-4174-94e5-b6d495565ab9",
-    "name": "default-roles-onecx",
+    "name": "default-roles-test",
     "description": "${role_default-roles}",
     "composite": true,
     "clientRole": false,
-    "containerId": "onecx"
+    "containerId": "test"
   },
   "requiredCredentials": ["password"],
   "otpPolicyType": "totp",
@@ -453,93 +453,93 @@
     {
       "id": "f994b031-8316-47fe-8ebf-c76803b071d6",
       "createdTimestamp": 1760416629430,
-      "username": "onecx",
+      "username": "test",
       "enabled": true,
       "totp": false,
       "emailVerified": true,
       "firstName": "OneCX",
       "lastName": "Admin",
-      "email": "onecx_admin@1000kit.org",
+      "email": "test_admin@1000kit.org",
       "attributes": {},
       "credentials": [
         {
           "type": "password",
-          "value": "onecx"
+          "value": "test"
         }
       ],
-      "realmRoles": ["onecx-admin"]
+      "realmRoles": ["test-admin"]
     },
     {
       "id": "3248e0b4-a5a8-4091-94e2-64e4f961f268",
       "createdTimestamp": 1760416629430,
-      "username": "onecx_user",
+      "username": "test_user",
       "enabled": true,
       "totp": false,
       "emailVerified": true,
-      "firstName": "OneCX",
+      "firstName": "Test",
       "lastName": "User",
-      "email": "onecx_user@1000kit.org",
+      "email": "test_user@1000kit.org",
       "attributes": {},
       "credentials": [
         {
           "type": "password",
-          "value": "onecx_user"
+          "value": "test_user"
         }
       ],
-      "realmRoles": ["onecx-user"]
+      "realmRoles": ["test-user"]
     },
     {
       "id": "9e70a802-b9bd-496c-a03f-e866c4a7f8ca",
       "createdTimestamp": 1760416629430,
-      "username": "onecx_t1_admin",
+      "username": "test_t1_admin",
       "enabled": true,
       "totp": false,
       "emailVerified": true,
       "firstName": "OneCX",
       "lastName": "T1 Admin",
-      "email": "onecx_t1_admin@1000kit.org",
+      "email": "test_t1_admin@1000kit.org",
       "attributes": {
         "orgId": ["t1"]
       },
       "credentials": [
         {
           "type": "password",
-          "value": "onecx_t1_admin"
+          "value": "test_t1_admin"
         }
       ],
-      "realmRoles": ["onecx-admin"]
+      "realmRoles": ["test-admin"]
     },
     {
       "id": "f9d671d6-995b-49d7-9328-56d8020db58c",
       "createdTimestamp": 1760416629430,
-      "username": "onecx_t1_user",
+      "username": "test_t1_user",
       "enabled": true,
       "totp": false,
       "emailVerified": true,
       "firstName": "OneCX",
       "lastName": "T1 User",
-      "email": "onecx_t1_user@1000kit.org",
+      "email": "test_t1_user@1000kit.org",
       "attributes": {
         "orgId": ["t1"]
       },
       "credentials": [
         {
           "type": "password",
-          "value": "onecx_t1_user"
+          "value": "test_t1_user"
         }
       ],
-      "realmRoles": ["onecx-user"]
+      "realmRoles": ["test-user"]
     },
     {
       "id": "3a16329a-825b-4b8f-bcbb-4dee95c688a8",
       "createdTimestamp": 1760416629430,
-      "username": "onecx_t2_admin",
+      "username": "test_t2_admin",
       "enabled": true,
       "totp": false,
       "emailVerified": true,
       "firstName": "OneCX",
       "lastName": "T2 Admin",
-      "email": "onecx_t2_admin@1000kit.org",
+      "email": "test_t2_admin@1000kit.org",
       "attributes": {
         "partyId": ["107"],
         "orgId": ["t2"]
@@ -547,21 +547,21 @@
       "credentials": [
         {
           "type": "password",
-          "value": "onecx_t2_admin"
+          "value": "test_t2_admin"
         }
       ],
-      "realmRoles": ["onecx-admin"]
+      "realmRoles": ["test-admin"]
     },
     {
       "id": "58ed91c9-0444-4399-9070-ec28d6aaa00a",
       "createdTimestamp": 1760416629430,
-      "username": "onecx_t2_user",
+      "username": "test_t2_user",
       "enabled": true,
       "totp": false,
       "emailVerified": true,
       "firstName": "OneCX",
       "lastName": "T2 User",
-      "email": "onecx_t2_user@1000kit.org",
+      "email": "test_t2_user@1000kit.org",
       "attributes": {
         "partyId": ["107"],
         "orgId": ["t2"]
@@ -569,10 +569,10 @@
       "credentials": [
         {
           "type": "password",
-          "value": "onecx_t2_user"
+          "value": "test_t2_user"
         }
       ],
-      "realmRoles": ["onecx-user"]
+      "realmRoles": ["test-user"]
     }
   ],
   "scopeMappings": [
@@ -595,12 +595,12 @@
       "clientId": "account",
       "name": "${client_account}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/onecx/account/",
+      "baseUrl": "/realms/test/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": ["/realms/onecx/account/*"],
+      "redirectUris": ["/realms/test/account/*"],
       "webOrigins": [],
       "notBefore": 0,
       "bearerOnly": false,
@@ -624,12 +624,12 @@
       "clientId": "account-console",
       "name": "${client_account-console}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/onecx/account/",
+      "baseUrl": "/realms/test/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": ["/realms/onecx/account/*"],
+      "redirectUris": ["/realms/test/account/*"],
       "webOrigins": [],
       "notBefore": 0,
       "bearerOnly": false,
@@ -931,12 +931,12 @@
       "clientId": "security-admin-console",
       "name": "${client_security-admin-console}",
       "rootUrl": "${authAdminUrl}",
-      "baseUrl": "/admin/onecx/console/",
+      "baseUrl": "/admin/test/console/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": ["/admin/onecx/console/*"],
+      "redirectUris": ["/admin/test/console/*"],
       "webOrigins": ["+"],
       "notBefore": 0,
       "bearerOnly": false,

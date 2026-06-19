@@ -40,5 +40,5 @@ export const isTraefikBase = (() => {
 
 export const outputDir = ensureOutDir(process.env.OUTPUT_DIR || './e2e-results')
 
-export const username = process.env.USERNAME || 'onecx'
-export const password = process.env.PASSWORD || 'onecx'
+export const username = process.env.USERNAME || 'test' //TODO: should it be set here or in the dockerfile? Right now the one from dockerfile doesn't work
+export const password = process.env.PASSWORD || 'test'
