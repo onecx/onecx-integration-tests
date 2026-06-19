@@ -36,7 +36,7 @@ export class OnecxKeycloakContainer extends GenericContainer {
 
   private initDefaultRealms: string[] = []
 
-  private initDefaultRealm = 'src/lib/config'
+  private initRealmPath = 'src/lib/config'
 
   protected loggingEnabled = false
 
@@ -47,7 +47,10 @@ export class OnecxKeycloakContainer extends GenericContainer {
   ) {
     super(image)
 
-    if (this.platformConfig?.config?.realm) this.withRealm(this.platformConfig?.config?.realm)
+    // custom config initialization based on platform config
+    const { realm, realmPath } = this.platformConfig.config ?? {}
+    if (realm) this.withRealm(realm)
+    if (realmPath) this.withDefaultPath(realmPath)
 
     this.withCommand(['start-dev', '--import-realm']).withNetworkAliases('keycloak-app').withStartupTimeout(120_000)
   }
@@ -93,6 +96,10 @@ export class OnecxKeycloakContainer extends GenericContainer {
 
   withInitPath(path: string) {
     this.initDefaultRealms.push(path)
+    return this
+  }
+  withDefaultPath(path: string) {
+    this.initRealmPath = path
     return this
   }
 
@@ -195,7 +202,7 @@ export class OnecxKeycloakContainer extends GenericContainer {
         stream.on('end', () => console.log(`${this.networkAliases[0]}: Stream closed`))
       })
     }
-    this.withInitPath(this.initDefaultRealm)
+    this.withInitPath(this.initRealmPath)
 
     for (const p of this.initDefaultRealms) {
       this.withCopyDirectoriesToContainer([

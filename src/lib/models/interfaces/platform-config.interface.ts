@@ -17,6 +17,8 @@ export interface PlatformConfig {
     importsPath?: string
     /** Define the custom realm */
     realm?: string
+    /** Define the custom realm path */
+    realmPath?: string
   }
 
   /** Image overrides - allows testing against different images */
