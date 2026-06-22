@@ -3,6 +3,8 @@ import { CONTAINER } from '../models/enums/container.enum'
 import { OnecxPostgresContainer, StartedOnecxPostgresContainer } from '../containers/core/onecx-postgres'
 import { OnecxKeycloakContainer, StartedOnecxKeycloakContainer } from '../containers/core/onecx-keycloak'
 import { ShellBffContainer } from '../containers/bff/onecx-shell-bff'
+import { ParameterBffContainer } from '../containers/bff/onecx-parameter-bff'
+import { WorkspaceBffContainer } from '../containers/bff/onecx-workspace-bff'
 import { ImageResolver } from './image-resolver'
 import { StartedNetwork } from 'testcontainers'
 import { ContainerRegistry } from './container-registry'
@@ -10,7 +12,9 @@ import { PlatformConfig } from '../models/interfaces/platform-config.interface'
 import { StartedBffContainer } from '../containers/basic/onecx-bff'
 import { StartedUiContainer } from '../containers/basic/onecx-ui'
 import { ShellUiContainer } from '../containers/ui/onecx-shell-ui'
+import { WorkspaceUiContainer } from '../containers/ui/onecx-workspace-ui'
 import { IamKcContainer } from '../containers/svc/onecx-iam-kc-svc'
+import { ParameterSvcContainer } from '../containers/svc/onecx-parameter-svc'
 import { WorkspaceSvcContainer } from '../containers/svc/onecx-workspace-svc'
 import { UserProfileSvcContainer } from '../containers/svc/onecx-user-profile-svc'
 import { ThemeSvcContainer } from '../containers/svc/onecx-theme-svc'
@@ -22,10 +26,14 @@ import { PermissionSvcContainer } from '../containers/svc/onecx-permission-svc'
 jest.mock('../containers/core/onecx-postgres')
 jest.mock('../containers/core/onecx-keycloak')
 jest.mock('../containers/bff/onecx-shell-bff')
+jest.mock('../containers/bff/onecx-parameter-bff')
+jest.mock('../containers/bff/onecx-workspace-bff')
 jest.mock('../containers/ui/onecx-shell-ui')
+jest.mock('../containers/ui/onecx-workspace-ui')
 jest.mock('./image-resolver')
 jest.mock('./container-registry')
 jest.mock('../containers/svc/onecx-iam-kc-svc')
+jest.mock('../containers/svc/onecx-parameter-svc')
 jest.mock('../containers/svc/onecx-workspace-svc')
 jest.mock('../containers/svc/onecx-user-profile-svc')
 jest.mock('../containers/svc/onecx-theme-svc')
@@ -36,9 +44,13 @@ jest.mock('../containers/svc/onecx-permission-svc')
 describe('CoreContainerStarter', () => {
   const mockStartedPostgres = { name: 'postgres-container' } as unknown as StartedOnecxPostgresContainer
   const mockStartedKeycloak = { name: 'keycloak-container' } as unknown as StartedOnecxKeycloakContainer
-  const mockStartedBff = { name: 'shell-bff-container' } as unknown as StartedBffContainer
-  const mockStartedUi = { name: 'shell-ui-container' } as unknown as StartedUiContainer
+  const mockStartedShellBff = { name: 'shell-bff-container' } as unknown as StartedBffContainer
+  const mockStartedParameterBff = { name: 'parameter-bff-container' } as unknown as StartedBffContainer
+  const mockStartedWorkspaceBff = { name: 'workspace-bff-container' } as unknown as StartedBffContainer
+  const mockStartedShellUi = { name: 'shell-ui-container' } as unknown as StartedUiContainer
+  const mockStartedWorkspaceUi = { name: 'workspace-ui-container' } as unknown as StartedUiContainer
   const mockStartedIamKc = { name: 'iam-kc-container' } as unknown as StartedSvcContainer
+  const mockStartedParameter = { name: 'parameter-container' } as unknown as StartedSvcContainer
   const mockStartedWorkspace = { name: 'workspace-container' } as unknown as StartedSvcContainer
   const mockStartedUserProfile = { name: 'user-profile-container' } as unknown as StartedSvcContainer
   const mockStartedTheme = { name: 'theme-container' } as unknown as StartedSvcContainer
@@ -69,17 +81,37 @@ describe('CoreContainerStarter', () => {
     ;(ShellBffContainer as unknown as jest.Mock).mockImplementation(() => ({
       withNetwork: jest.fn().mockReturnThis(),
       withLoggingEnabled: jest.fn().mockReturnThis(),
-      start: jest.fn().mockResolvedValue(mockStartedBff),
+      start: jest.fn().mockResolvedValue(mockStartedShellBff),
+    }))
+    ;(ParameterBffContainer as unknown as jest.Mock).mockImplementation(() => ({
+      withNetwork: jest.fn().mockReturnThis(),
+      withLoggingEnabled: jest.fn().mockReturnThis(),
+      start: jest.fn().mockResolvedValue(mockStartedParameterBff),
+    }))
+    ;(WorkspaceBffContainer as unknown as jest.Mock).mockImplementation(() => ({
+      withNetwork: jest.fn().mockReturnThis(),
+      withLoggingEnabled: jest.fn().mockReturnThis(),
+      start: jest.fn().mockResolvedValue(mockStartedWorkspaceBff),
     }))
     ;(ShellUiContainer as unknown as jest.Mock).mockImplementation(() => ({
       withNetwork: jest.fn().mockReturnThis(),
       withLoggingEnabled: jest.fn().mockReturnThis(),
-      start: jest.fn().mockResolvedValue(mockStartedUi),
+      start: jest.fn().mockResolvedValue(mockStartedShellUi),
+    }))
+    ;(WorkspaceUiContainer as unknown as jest.Mock).mockImplementation(() => ({
+      withNetwork: jest.fn().mockReturnThis(),
+      withLoggingEnabled: jest.fn().mockReturnThis(),
+      start: jest.fn().mockResolvedValue(mockStartedWorkspaceUi),
     }))
     ;(IamKcContainer as unknown as jest.Mock).mockImplementation(() => ({
       withNetwork: jest.fn().mockReturnThis(),
       withLoggingEnabled: jest.fn().mockReturnThis(),
       start: jest.fn().mockResolvedValue(mockStartedIamKc),
+    }))
+    ;(ParameterSvcContainer as unknown as jest.Mock).mockImplementation(() => ({
+      withNetwork: jest.fn().mockReturnThis(),
+      withLoggingEnabled: jest.fn().mockReturnThis(),
+      start: jest.fn().mockResolvedValue(mockStartedParameter),
     }))
     ;(WorkspaceSvcContainer as unknown as jest.Mock).mockImplementation(() => ({
       withNetwork: jest.fn().mockReturnThis(),
@@ -131,17 +163,24 @@ describe('CoreContainerStarter', () => {
 
     await starter.startBffContainers(mockStartedKeycloak)
 
-    expect(containerRegistry.addContainer).toHaveBeenCalledWith(CONTAINER.SHELL_BFF, mockStartedBff)
+    expect(containerRegistry.addContainer).toHaveBeenCalledWith(CONTAINER.SHELL_BFF, mockStartedShellBff)
+    expect(containerRegistry.addContainer).toHaveBeenCalledWith(CONTAINER.PARAMETER_BFF, mockStartedParameterBff)
+    expect(containerRegistry.addContainer).toHaveBeenCalledWith(CONTAINER.WORKSPACE_BFF, mockStartedWorkspaceBff)
   })
 
   it('start ui containers', async () => {
-    containerRegistry.getContainer.mockReturnValue(mockStartedBff)
+    containerRegistry.getContainer.mockImplementation((name) => {
+      if (name === CONTAINER.SHELL_BFF) return mockStartedShellBff
+      if (name === CONTAINER.WORKSPACE_BFF) return mockStartedWorkspaceBff
+      return undefined
+    })
 
     imageResolver.getUiImage.mockResolvedValue('ui-image')
 
     await starter.startUiContainers(mockStartedKeycloak)
 
-    expect(containerRegistry.addContainer).toHaveBeenCalledWith(CONTAINER.SHELL_UI, mockStartedUi)
+    expect(containerRegistry.addContainer).toHaveBeenCalledWith(CONTAINER.SHELL_UI, mockStartedShellUi)
+    expect(containerRegistry.addContainer).toHaveBeenCalledWith(CONTAINER.WORKSPACE_UI, mockStartedWorkspaceUi)
   })
 
   it('start service containers', async () => {
@@ -154,6 +193,7 @@ describe('CoreContainerStarter', () => {
 
     await starter.startServiceContainers(mockStartedPostgres, mockStartedKeycloak)
 
+    expect(containerRegistry.addContainer).toHaveBeenCalledWith(CONTAINER.PARAMETER_SVC, mockStartedParameter)
     expect(containerRegistry.addContainer).toHaveBeenCalledWith(CONTAINER.WORKSPACE_SVC, mockStartedWorkspace)
     expect(containerRegistry.addContainer).toHaveBeenCalledWith(CONTAINER.USER_PROFILE_SVC, mockStartedUserProfile)
     expect(containerRegistry.addContainer).toHaveBeenCalledWith(CONTAINER.THEME_SVC, mockStartedTheme)

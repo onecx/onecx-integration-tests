@@ -11,6 +11,16 @@ export interface PlatformConfig {
   withLoggingEnabled?: boolean | string[]
   /** Define the heartbeat config */
   heartbeat?: HeartbeatConfig
+
+  config?: {
+    /** Define the custom import path */
+    importsPath?: string
+    /** Define the custom realm */
+    realm?: string
+    /** Define the custom realm path */
+    realmPath?: string
+  }
+
   /** Image overrides - allows testing against different images */
   platformOverrides?: {
     /** Core service images */
@@ -22,6 +32,7 @@ export interface PlatformConfig {
     /** Backend service images */
     services?: {
       iamKc?: { image?: string }
+      parameter?: { image?: string }
       workspace?: { image?: string }
       userProfile?: { image?: string }
       theme?: { image?: string }
@@ -29,13 +40,16 @@ export interface PlatformConfig {
       productStore?: { image?: string }
       permission?: { image?: string }
     }
-    /** BFF shell service images */
+    /** BFF service images */
     bff?: {
+      parameter?: { image?: string }
       shell?: { image?: string }
+      workspace?: { image?: string }
     }
-    /** UI shell service images */
+    /** UI service images */
     ui?: {
       shell?: { image?: string }
+      workspace?: { image?: string }
     }
   }
   container?: {

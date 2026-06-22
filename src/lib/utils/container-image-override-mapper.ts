@@ -14,6 +14,7 @@ export class ContainerImageOverrideMapper {
 
     const overrideMap: Record<OnecxService, string | undefined> = {
       [OnecxService.IAM_KC_SVC]: serviceImages.iamKc?.image,
+      [OnecxService.PARAMETER_SVC]: serviceImages.parameter?.image,
       [OnecxService.WORKSPACE_SVC]: serviceImages.workspace?.image,
       [OnecxService.USER_PROFILE_SVC]: serviceImages.userProfile?.image,
       [OnecxService.THEME_SVC]: serviceImages.theme?.image,
@@ -33,7 +34,9 @@ export class ContainerImageOverrideMapper {
     if (!overrides) return undefined
 
     const overrideMap: Record<OnecxBff, string | undefined> = {
+      [OnecxBff.PARAMETER_BFF]: overrides.parameter?.image,
       [OnecxBff.SHELL_BFF]: overrides.shell?.image,
+      [OnecxBff.WORKSPACE_BFF]: overrides.workspace?.image,
     }
 
     return overrideMap[bffService]
@@ -48,6 +51,7 @@ export class ContainerImageOverrideMapper {
 
     const overrideMap: Record<OnecxUi, string | undefined> = {
       [OnecxUi.SHELL_UI]: overrides.shell?.image,
+      [OnecxUi.WORKSPACE_UI]: overrides.workspace?.image,
     }
 
     return overrideMap[uiService]

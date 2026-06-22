@@ -168,7 +168,6 @@ export class ImportManager {
 
     logger.success('IMPORT_COMPLETE')
   }
-
   /**
    * Retrieves an authentication token from the Keycloak service
    *

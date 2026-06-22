@@ -7,7 +7,7 @@ import { StartedOnecxKeycloakContainer } from '../containers/core/onecx-keycloak
 import * as fs from 'fs'
 import * as path from 'path'
 import { StartedShellUiContainer } from '../containers/ui/onecx-shell-ui'
-import { ContainerInfo } from '../../imports/import-manager'
+import { ContainerInfo } from '../../imports-scripts/import-manager'
 import { PlatformConfig } from '../models/interfaces/platform-config.interface'
 import { loggingEnabled } from '../utils/logging-enable'
 import { Logger, LogMessages } from '../utils/logger'
@@ -47,7 +47,7 @@ export class DataImporter {
       const containerInfoPath = this.createContainerInfo(startedContainers)
 
       const importImage = await this.imageResolver.getImportManagerBaseImage(config)
-      const importer = await new ImportManagerContainer(importImage, containerInfoPath)
+      const importer = await new ImportManagerContainer(importImage, containerInfoPath, config)
         .withNetwork(network)
         .withLoggingEnabled(loggingEnabled(config, [CONTAINER.IMPORT_MANAGER]))
         .start()
@@ -208,6 +208,7 @@ export class DataImporter {
       [CONTAINER.THEME_SVC]: 'onecx-theme-svc',
       [CONTAINER.PRODUCT_STORE_SVC]: 'onecx-product-store-svc',
       [CONTAINER.PERMISSION_SVC]: 'onecx-permission-svc',
+      [CONTAINER.PARAMETER_SVC]: 'onecx-parameter-svc',
       [CONTAINER.WORKSPACE_SVC]: 'onecx-workspace-svc',
     }
 

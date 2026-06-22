@@ -2,32 +2,33 @@ import { getCommonEnvironmentVariables } from '../../utils/common-env.utils'
 import { StartedUiContainer, UiContainer } from '../basic/onecx-ui'
 import { StartedOnecxKeycloakContainer } from '../core/onecx-keycloak'
 
-export class ShellUiContainer extends UiContainer {
-  private client_user_id = 'onecx-shell-ui-client'
+export class WorkspaceUiContainer extends UiContainer {
+  private client_user_id = 'onecx-workspace-ui-client'
 
   constructor(image: string, private keycloakContainer: StartedOnecxKeycloakContainer) {
     super(image)
     this.withEnvironment({
       ONECX_PERMISSIONS_ENABLED: 'true',
       ONECX_PERMISSIONS_CACHE_ENABLED: 'false',
-      ONECX_PERMISSIONS_PRODUCT_NAME: 'onecx-shell',
+      ONECX_PERMISSIONS_PRODUCT_NAME: 'onecx-workspace',
       KEYCLOAK_URL: `http://${keycloakContainer.getNetworkAliases()[0]}:${keycloakContainer.getPort()}`,
-      KEYCLOAK_REALM: keycloakContainer.getRealm(),
       ONECX_VAR_REMAP: 'KEYCLOAK_REALM=KC_REALM;KEYCLOAK_CLIENT_ID=CLIENT_USER_ID',
       CLIENT_USER_ID: `${this.client_user_id}`,
     })
       .withEnvironment(getCommonEnvironmentVariables(this.keycloakContainer))
-      .withNetworkAliases('onecx-shell-ui')
-      .withAppBaseHref('/onecx-shell/')
+      .withNetworkAliases('onecx-workspace-ui')
+      .withAppBaseHref('/onecx-workspace/')
+      .withAppId('onecx-workspace-ui')
+      .withProductName('onecx-workspace')
   }
 
-  override async start(): Promise<StartedShellUiContainer> {
+  override async start(): Promise<StartedWorkspaceUiContainer> {
     const startedUiContainer = await super.start()
-    return new StartedShellUiContainer(startedUiContainer, this.client_user_id)
+    return new StartedWorkspaceUiContainer(startedUiContainer, this.client_user_id)
   }
 }
 
-export class StartedShellUiContainer extends StartedUiContainer {
+export class StartedWorkspaceUiContainer extends StartedUiContainer {
   constructor(startedUiContainer: StartedUiContainer, private clientUserId: string) {
     super(
       startedUiContainer.getStartedTestContainer(),

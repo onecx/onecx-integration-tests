@@ -5,6 +5,7 @@ import { HealthCheck } from 'testcontainers/build/types'
 import { HealthCheckableContainer } from '../../models/interfaces/health-checkable-container.interface'
 import { HealthCheckExecutor } from '../../models/interfaces/health-check-executor.interface'
 import { HttpHealthCheckExecutor, SkipHealthCheckExecutor } from '../../utils/health-check-executor'
+import { PlatformConfig } from 'src/lib/models'
 
 interface OnecxEnvironment {
   realm: string
@@ -18,27 +19,39 @@ interface OnecxEnvironment {
   port: number
 }
 
+const onecxEnvironmentInit: OnecxEnvironment = {
+  realm: 'onecx',
+  adminRealm: 'master',
+  adminUsername: 'admin',
+  adminPassword: 'admin',
+  keycloakDatabaseUsername: 'keycloak',
+  keycloakDatabasePassword: 'keycloak',
+  keycloakDatabase: 'keycloak',
+  keycloakHostname: 'keycloak-app',
+  port: 8080,
+}
+
 export class OnecxKeycloakContainer extends GenericContainer {
-  private onecxEnvironment: OnecxEnvironment = {
-    realm: 'onecx',
-    adminRealm: 'master',
-    adminUsername: 'admin',
-    adminPassword: 'admin',
-    keycloakDatabaseUsername: 'keycloak',
-    keycloakDatabasePassword: 'keycloak',
-    keycloakDatabase: 'keycloak',
-    keycloakHostname: 'keycloak-app',
-    port: 8080,
-  }
+  private onecxEnvironment: OnecxEnvironment = onecxEnvironmentInit
 
   private initDefaultRealms: string[] = []
 
-  private initDefaultRealm = 'src/lib/config'
+  private initRealmPath = 'src/lib/config'
 
   protected loggingEnabled = false
 
-  constructor(image: string, private readonly databaseContainer: StartedOnecxPostgresContainer) {
+  constructor(
+    image: string,
+    private readonly databaseContainer: StartedOnecxPostgresContainer,
+    private readonly platformConfig: PlatformConfig
+  ) {
     super(image)
+
+    // custom config initialization based on platform config
+    const { realm, realmPath } = this.platformConfig.config ?? {}
+    if (realm) this.withRealm(realm)
+    if (realmPath) this.withDefaultPath(realmPath)
+
     this.withCommand(['start-dev', '--import-realm']).withNetworkAliases('keycloak-app').withStartupTimeout(120_000)
   }
 
@@ -83,6 +96,10 @@ export class OnecxKeycloakContainer extends GenericContainer {
 
   withInitPath(path: string) {
     this.initDefaultRealms.push(path)
+    return this
+  }
+  withDefaultPath(path: string) {
+    this.initRealmPath = path
     return this
   }
 
@@ -185,7 +202,7 @@ export class OnecxKeycloakContainer extends GenericContainer {
         stream.on('end', () => console.log(`${this.networkAliases[0]}: Stream closed`))
       })
     }
-    this.withInitPath(this.initDefaultRealm)
+    this.withInitPath(this.initRealmPath)
 
     for (const p of this.initDefaultRealms) {
       this.withCopyDirectoriesToContainer([
