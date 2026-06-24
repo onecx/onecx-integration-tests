@@ -4,7 +4,6 @@ import * as path from 'path'
 import { HealthCheckableContainer } from '../../models/interfaces/health-checkable-container.interface'
 import { HealthCheckExecutor } from '../../models/interfaces/health-check-executor.interface'
 import { SkipHealthCheckExecutor } from '../../utils/health-check-executor'
-import { packagePath } from '../../utils/package-root'
 import { PlatformConfig } from 'src/lib/models'
 
 export class ImportManagerContainer extends GenericContainer {
@@ -56,8 +55,8 @@ export class ImportManagerContainer extends GenericContainer {
 
   override async start(): Promise<StartedImportManagerContainer> {
     const { importsPath } = this.platformConfig.config ?? {}
-    const resolvedImportsPath = importsPath ? path.resolve(importsPath) : packagePath('src', 'imports')
-    const scriptsPath = packagePath('src', 'imports-scripts')
+    const resolvedImportsPath = importsPath ? path.resolve(importsPath) : path.resolve(__dirname, '../../../imports')
+    const scriptsPath = path.resolve(__dirname, '../../../imports-scripts')
 
     this.withCopyFilesToContainer([
       {

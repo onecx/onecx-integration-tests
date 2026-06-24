@@ -11,7 +11,6 @@ import { PlatformConfig } from '../models/interfaces/platform-config.interface'
 import { loggingEnabled } from '../utils/logging-enable'
 import { Logger, LogMessages } from '../utils/logger'
 import { isE2eContainer, isKeycloakContainer, isShellUiContainer } from '../utils/container-utils'
-import { packagePath } from '../utils/package-root'
 
 type LogFilePathProvider = (containerName: string) => string | undefined
 
@@ -249,7 +248,8 @@ export class DataImporter {
   }
 
   private writeContainerInfoFile(containerInfo: ContainerInfo): string {
-    const containerInfoPath = packagePath('src', 'imports', 'container-info.json')
+    // TODO: Consider using a temporary file or a more secure location for the container info file
+    const containerInfoPath = path.resolve(__dirname, '../../../container-info.json')
 
     // Ensure the directory exists
     const dir = path.dirname(containerInfoPath)
