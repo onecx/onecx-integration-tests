@@ -4,6 +4,12 @@ import { UiContainerInterface } from './ui.interface'
 import { HeartbeatConfig } from './health-checker.interface'
 import { E2eContainerInterface } from './e2e.interface'
 
+interface UiOverride {
+  image?: string
+  remoteEntry?: string
+  remoteBaseUrl?: string
+}
+
 export interface PlatformConfig {
   /** Whether to run data import after starting services */
   importData?: boolean
@@ -48,8 +54,8 @@ export interface PlatformConfig {
     }
     /** UI service images */
     ui?: {
-      shell?: { image?: string }
-      workspace?: { image?: string }
+      shell?: UiOverride
+      workspace?: UiOverride
     }
   }
   container?: {

@@ -283,6 +283,14 @@ export class UserDefinedContainerStarter {
       uiContainer.withProductName(uiConfig.uiDetails.productName)
     }
 
+    if (uiConfig.uiDetails.remoteEntry) {
+      uiContainer.withRemoteEntry(uiConfig.uiDetails.remoteEntry)
+    }
+
+    if (uiConfig.uiDetails.remoteBaseUrl) {
+      uiContainer.withRemoteBaseUrl(uiConfig.uiDetails.remoteBaseUrl)
+    }
+
     if (uiConfig.environments) {
       uiContainer.withEnvironment(uiConfig.environments)
     }

@@ -5,6 +5,13 @@ import { Logger } from '../utils/imports-logger'
 
 const logger = new Logger('ImportProductStore')
 
+/**
+ * Module federation host entries keyed by appId, as produced by the runner into
+ * `container-info.json`. `alias`/`port` identify the UI container. `entry` and `baseUrl` optionally
+ * override the independently resolved module federation entry and application base paths.
+ */
+export type UiEntryMap = Record<string, { alias: string; port: number; entry?: string; baseUrl?: string }>
+
 export async function importProducts(baseDir: string, endpointBase: string) {
   logger.info('IMPORT_PRODUCTS_START')
   const dir = path.join(baseDir, 'products')
@@ -111,7 +118,12 @@ export async function importMicroservices(baseDir: string, endpointBase: string)
   }
 }
 
-export async function importMicrofrontends(baseDir: string, endpointBase: string, port: number) {
+export async function importMicrofrontends(
+  baseDir: string,
+  endpointBase: string,
+  port: number,
+  uiEntries?: UiEntryMap
+) {
   logger.info('IMPORT_MICROFRONTENDS_START')
   const dir = path.join(baseDir, 'microfrontends')
   const files = await readdir(dir)
@@ -124,18 +136,10 @@ export async function importMicrofrontends(baseDir: string, endpointBase: string
     const data = await readFile(path.join(dir, file), 'utf-8')
     const mfeData = JSON.parse(data)
 
-    // Transform relative URLs to Docker-network URLs using appId from filename as hostname.
-    // The MFE assets are served from the UI container directly (no nginx proxy needed for loading).
-    if (appid && mfeData.remoteBaseUrl && !mfeData.remoteBaseUrl.startsWith('http')) {
-      const originalBaseUrl = mfeData.remoteBaseUrl
-      mfeData.remoteBaseUrl = `http://${appid}:${port}/`
-      logger.info('PROCESSING_FILE', `URL Transform - BaseURL: ${originalBaseUrl} -> ${mfeData.remoteBaseUrl}`)
-    }
-
-    if (appid && mfeData.remoteEntry && !mfeData.remoteEntry.startsWith('http')) {
-      const originalEntry = mfeData.remoteEntry
-      mfeData.remoteEntry = `http://${appid}:${port}/remoteEntry.js`
-      logger.info('PROCESSING_FILE', `URL Transform - Entry: ${originalEntry} -> ${mfeData.remoteEntry}`)
+    // Transform relative URLs to Docker-network URLs. The MFE assets are served from the UI container
+    // directly (no nginx proxy needed for loading), so base and entry resolve against the same host.
+    if (appid) {
+      resolveRemoteUrls(mfeData, appid, port, uiEntries)
     }
 
     const endpoint = `${endpointBase}/operator/mfe/v1/${product}/${appid}`
@@ -149,4 +153,34 @@ export async function importMicrofrontends(baseDir: string, endpointBase: string
       logger.error('UPLOAD_ERROR', `MFE ${mfe} for app ${appid} for product ${product}`, err)
     }
   }
+}
+
+/**
+ * Create absolute Docker-network URLs for `remoteEntry` and `remoteBaseUrl`.
+ *
+ * Both fields use the same UI container host but represent independent locations. Values are chosen
+ * from configured paths first, import data second, and the defaults `/remoteEntry.js` and `/` last.
+ *
+ * Module-private: only called from {@link importMicrofrontends}.
+ */
+function resolveRemoteUrls(
+  mfeData: { remoteEntry?: string; remoteBaseUrl?: string },
+  appid: string,
+  port: number,
+  uiEntries: UiEntryMap | undefined
+): void {
+  const configured = uiEntries?.[appid]
+  const alias = configured?.alias ?? appid
+  const hostPort = configured?.port ?? port
+  const hostBaseUrl = new URL(`http://${alias}:${hostPort}/`)
+
+  const entryPath = configured?.entry || mfeData.remoteEntry || '/remoteEntry.js'
+  const absoluteEntry = new URL(entryPath, hostBaseUrl).toString()
+  logger.info('PROCESSING_FILE', `URL Transform - Entry: ${entryPath} -> ${absoluteEntry}`)
+  mfeData.remoteEntry = absoluteEntry
+
+  const basePath = configured?.baseUrl || mfeData.remoteBaseUrl || '/'
+  const absoluteBase = new URL(basePath, hostBaseUrl).toString()
+  logger.info('PROCESSING_FILE', `URL Transform - BaseURL: ${basePath} -> ${absoluteBase}`)
+  mfeData.remoteBaseUrl = absoluteBase
 }

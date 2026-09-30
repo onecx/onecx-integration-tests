@@ -5,6 +5,13 @@ export interface UiDetails {
   appBaseHref: string
   appId: string
   productName: string
+  /**
+   * Optional path or absolute HTTP(S) URL of the module federation entry file (e.g.
+   * `/mfe/workspace/mf-manifest.json`). Used to build the entry URL for product-store MFE imports.
+   */
+  remoteEntry?: string
+  /** Optional path or absolute HTTP(S) URL used as the remote application base. */
+  remoteBaseUrl?: string
 }
 
 export interface UiContainerInterface {
