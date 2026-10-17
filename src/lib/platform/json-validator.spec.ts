@@ -276,6 +276,44 @@ describe('PlatformConfigJsonValidator', () => {
           expect(result.isValid).toBe(false)
           expect(result.errors?.[0]).toContain('No valid config file found')
         })
+
+        it('should not fall back to the default config when an explicit path is missing', () => {
+          const explicitPath = 'explicit/platform.json'
+          const defaultPath = path.join(process.cwd(), 'integration-tests', 'platform', 'platform.json')
+          const mockConfig = {
+            platformConfig: {
+              importData: true,
+            },
+          }
+          const mockSchema = {
+            type: 'object',
+            properties: {
+              platformConfig: { type: 'object' },
+            },
+            required: ['platformConfig'],
+          }
+
+          // A readable default config exists on disk, so a fallback would succeed.
+          ;(fs.existsSync as jest.Mock).mockImplementation((p: string) => {
+            return p === defaultPath || p.endsWith('integration-tests.schema.json')
+          })
+          ;(fs.readFileSync as jest.Mock).mockImplementation((filePath: string) => {
+            if (filePath === defaultPath) {
+              return JSON.stringify(mockConfig)
+            }
+            if (filePath.endsWith('integration-tests.schema.json')) {
+              return JSON.stringify(mockSchema)
+            }
+            return ''
+          })
+
+          const result = validator.validateConfigFile(explicitPath)
+
+          expect(result.isValid).toBe(false)
+          expect(result.errors?.[0]).toBe(`Configuration file not found: ${explicitPath}`)
+          // The default config must not have been consulted.
+          expect(fs.readFileSync).not.toHaveBeenCalledWith(defaultPath, 'utf8')
+        })
       })
     })
   })

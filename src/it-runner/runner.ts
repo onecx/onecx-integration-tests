@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
+import { RunnerVersion } from '../lib/utils/runner-version'
 import { ArtifactsManager } from './artifacts/artifacts-manager'
 import { CliOptions } from './types/cli-options.interface'
 import { RunSummary } from './types/run-summary.interface'
@@ -47,7 +48,7 @@ export class IntegrationTestsRunner {
     const logFilePathProvider: LogFilePathProvider = (containerName: string) =>
       this.artifacts.getContainerLogPath(containerName)
 
-    const factory = platformFactory ?? (() => new PlatformManager(undefined, logFilePathProvider))
+    const factory = platformFactory ?? (() => new PlatformManager(options.configPath, logFilePathProvider))
     this.platformRuntime = factory()
     this.startTime = Date.now()
   }
@@ -229,6 +230,8 @@ export class IntegrationTestsRunner {
   ): number {
     const durationMs = Date.now() - this.startTime
 
+    const resolvedImages = this.platformRuntime.getResolvedImages()
+
     const summary: RunSummary = {
       runId: this.runId,
       startTime: new Date(this.startTime).toISOString(),
@@ -240,6 +243,9 @@ export class IntegrationTestsRunner {
       e2eExecutions: e2eReport?.records,
       e2eAggregate: e2eReport?.aggregate,
       interruptedBy: interruptedBy === 'SIGINT' || interruptedBy === 'SIGTERM' ? interruptedBy : undefined,
+      configPath: this.options.configPath ?? '',
+      runnerVersion: RunnerVersion.get(),
+      resolvedImages,
     }
 
     this.artifacts.writeSummary(summary)
@@ -252,6 +258,10 @@ export class IntegrationTestsRunner {
     console.log(`  Status:         ${status.toUpperCase()}`)
     console.log(`  Duration:       ${Math.round(durationMs / 1000)}s`)
     console.log(`  Exit Code:      ${exitCode}`)
+    if (this.options.configPath) {
+      console.log(`  Config Path:    ${this.options.configPath}`)
+    }
+    console.log(`  Runner Version: ${summary.runnerVersion}`)
     if (e2eReport?.aggregate) {
       console.log(`  E2E Total:      ${e2eReport.aggregate.total}`)
       console.log(`  E2E Succeeded:  ${e2eReport.aggregate.succeeded}`)
@@ -259,6 +269,14 @@ export class IntegrationTestsRunner {
     }
     if (interruptedBy) {
       console.log(`  Interrupted By: ${interruptedBy}`)
+    }
+    const resolvedImageEntries = Object.entries(resolvedImages)
+    if (resolvedImageEntries.length > 0) {
+      console.log('─'.repeat(65))
+      console.log(`  Resolved Images`)
+      for (const [name, image] of resolvedImageEntries) {
+        console.log(`    ${name}: ${image}`)
+      }
     }
     console.log('─'.repeat(65))
     console.log(`  Artifacts Dir:  ${this.artifacts.getRunDir()}`)

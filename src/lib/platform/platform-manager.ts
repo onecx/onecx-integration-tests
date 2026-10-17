@@ -315,6 +315,14 @@ export class PlatformManager implements PlatformRuntime {
   }
 
   /**
+   * Get the resolved images recorded by the image resolver, keyed by logical image name.
+   * Empty until containers have been started and images resolved.
+   */
+  getResolvedImages(): Record<string, string> {
+    return this.imageResolver?.getResolvedImages() ?? {}
+  }
+
+  /**
    * Run E2E tests if configured
    * This should be called after all containers are healthy.
    * E2E container failures are logged and execution continues.

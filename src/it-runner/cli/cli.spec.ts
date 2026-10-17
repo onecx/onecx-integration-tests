@@ -29,4 +29,21 @@ describe('parseCliArgs', () => {
   it('throws on unknown flag', () => {
     expect(() => parseCliArgs(['--unknown'], {})).toThrow("unknown option '--unknown'")
   })
+
+  it('parses the --config option value', () => {
+    const options = parseCliArgs(['--config', 'integration/platform.json'], {})
+
+    expect(options.configPath).toBe('integration/platform.json')
+    expect(options.dryRun).toBe(false)
+  })
+
+  it('leaves configPath undefined when --config is not provided', () => {
+    const options = parseCliArgs([], {})
+
+    expect(options.configPath).toBeUndefined()
+  })
+
+  it('throws when --config is provided without a value', () => {
+    expect(() => parseCliArgs(['--config'], {})).toThrow("option '--config <path>' argument missing")
+  })
 })

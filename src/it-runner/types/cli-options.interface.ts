@@ -6,4 +6,5 @@ export interface CliOptions {
   dryRun: boolean
   captureLogsToFile: boolean
   help: boolean
+  configPath?: string
 }

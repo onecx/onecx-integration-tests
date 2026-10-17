@@ -15,9 +15,15 @@ Validation behavior:
 * Validate JSON syntax
 * Validate schema constraints with AJV
 * Fail fast when required fields are missing or invalid
-* Search default path first, then fallback to recursive discovery
+* Select the contract strictly when a path is given, and discover it otherwise
 
-Default lookup order:
+Contract selection:
+
+* With `--config <path>`, the path is resolved strictly. The runner checks the path as given, then against the current working directory. If it does not exist, the run fails with `Configuration file not found: <path>`.
+* There is no fallback to the default path or recursive discovery when a path is provided. A missing or invalid selected contract always fails the run.
+* Use `--config` in CI to pin the exact contract. Discovery is a local convenience only.
+
+Discovery order (only when no `--config` is provided):
 
 * `integration-tests/platform/platform.json`
 * First file matching `*platform.json` under the current working directory
@@ -90,6 +96,11 @@ Example with heartbeat and E2E:
 === Platform Overrides
 
 Use `platformOverrides` to test specific image versions.
+
+Override resolution is strict:
+
+* When an override image is set, it must be pullable. If it cannot be verified, the run fails with `Explicitly requested image override is not available: <image>` — there is no silent fallback to the default image.
+* When no override is set, the default image is used deliberately. An unavailable default image is logged as a warning and container startup still proceeds (the startup failure is then reported).
 
 [source,json]
 ----

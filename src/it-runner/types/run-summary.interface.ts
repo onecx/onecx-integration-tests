@@ -14,4 +14,10 @@ export interface RunSummary {
   e2eExecutions?: E2eExecutionResult[]
   e2eAggregate?: E2eAggregateResult
   interruptedBy?: 'SIGINT' | 'SIGTERM'
+  /** Path passed via `--config`, or an empty string when the default discovery was used. */
+  configPath: string
+  /** Version of the published runner package that performed the run. */
+  runnerVersion: string
+  /** Logical container image names mapped to the final image each resolved to. */
+  resolvedImages: Record<string, string>
 }

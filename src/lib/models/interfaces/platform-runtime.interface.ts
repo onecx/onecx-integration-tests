@@ -14,4 +14,5 @@ export interface PlatformRuntime {
   startE2eContainers(shouldStop?: () => boolean): Promise<E2eExecutionRecord[] | undefined>
   stopAllContainers(): Promise<void>
   getAllContainers(): Map<string, unknown>
+  getResolvedImages(): Record<string, string>
 }

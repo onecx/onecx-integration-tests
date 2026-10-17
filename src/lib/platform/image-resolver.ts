@@ -10,8 +10,20 @@ const logger = new Logger('ImageResolver')
  * Resolves the actual image name to use based on the configuration and any version overrides
  */
 export class ImageResolver {
+  /**
+   * Maps each logical image name to the final image it resolved to during a run.
+   */
+  private readonly resolvedImages: Record<string, string> = {}
+
   constructor() {
     // Platform config will be set globally by PlatformManager
+  }
+
+  /**
+   * Get the resolved images recorded so far, keyed by logical image name.
+   */
+  getResolvedImages(): Record<string, string> {
+    return { ...this.resolvedImages }
   }
 
   /**
@@ -72,6 +84,7 @@ export class ImageResolver {
     const imageIsVerified = await this.verifyImage(imageName)
     if (imageIsVerified) {
       logger.success(`${LogMessages.IMAGE_VERIFY_SUCCESS}: ${imageName}`)
+      this.resolvedImages[imageName] = imageName
       return imageName
     }
 
@@ -79,6 +92,7 @@ export class ImageResolver {
     logger.warn(LogMessages.IMAGE_VERIFY_FAILED, `Image may not be available: ${imageName}`)
     logger.info(`${LogMessages.IMAGE_PULL_START}: Proceeding with unverified image ${imageName}`)
 
+    this.resolvedImages[imageName] = imageName
     return imageName
   }
 
@@ -87,17 +101,29 @@ export class ImageResolver {
   }
 
   /**
-   * Get any image with optional override and fallback to default
+   * Get any image with optional override.
+   *
+   * An explicitly requested override is strict: if it cannot be verified the run fails instead
+   * of silently falling back to the default image. When no override is requested the default
+   * image is used deliberately and verification failure only logs a warning.
    */
   private async getImageWithOverride(defaultImage: string, overrideImage: string | undefined): Promise<string> {
-    const finalImage = overrideImage || defaultImage
-    const imageIsVerified = await this.verifyImage(finalImage)
-    if (imageIsVerified) {
-      return finalImage
+    if (overrideImage) {
+      // An explicitly requested override is strict: fail instead of silently falling back.
+      const imageIsVerified = await this.verifyImage(overrideImage)
+      if (!imageIsVerified) {
+        throw new Error(`Explicitly requested image override is not available: ${overrideImage}`)
+      }
+      this.resolvedImages[defaultImage] = overrideImage
+      return overrideImage
     }
 
-    // If verification fails, fall back to default image
-    logger.warn(LogMessages.IMAGE_VERIFY_FAILED, `${overrideImage} -> ${defaultImage}`)
+    // No override requested: the default image is used deliberately.
+    const imageIsVerified = await this.verifyImage(defaultImage)
+    if (!imageIsVerified) {
+      logger.warn(LogMessages.IMAGE_VERIFY_FAILED, `Default image could not be verified: ${defaultImage}`)
+    }
+    this.resolvedImages[defaultImage] = defaultImage
     return defaultImage
   }
 }

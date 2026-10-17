@@ -24,6 +24,21 @@ Important fields:
 
 See xref:contract.adoc[Contract and Configuration] for full field details.
 
+== Explicit Contract Selection
+
+Select the contract explicitly with `--config <path>`:
+
+[source,bash]
+----
+onecx-it-runner --config integration/platform.json
+----
+
+* The path is resolved strictly: the runner checks the path as given, then against the current working directory. If it does not exist, the run fails with `Configuration file not found: <path>`.
+* There is no fallback to the default path or recursive discovery when a path is provided.
+* Discovery (default path, then recursive search) applies only when no `--config` is given.
+
+Use `--config` in CI so the run pins the exact contract. Discovery without it is a local convenience only.
+
 == CLI Options
 
 The runner is invoked the same way in this repository and by a consumer; the only difference is how the entry resolves.
@@ -63,6 +78,10 @@ The entry is a working, self-resolving `bin`: a single install of `@onecx/integr
 | `--dry-run`
 | `false`
 | Validate setup and print execution plan without starting containers
+
+| `--config <path>`
+| `undefined`
+| Path to the platform.json contract. Strict: fails with `Configuration file not found: <path>` when it does not exist, with no fallback.
 
 | `-h, --help`
 | `false`
@@ -166,8 +185,13 @@ integration-tests/artifacts/<run-id>/
 * `e2eExecutions`
 * `e2eAggregate`
 * `interruptedBy` when the runner stopped after `SIGINT` or `SIGTERM`
+* `configPath` the path passed via `--config`, or an empty string when discovery was used
+* `runnerVersion` the version of the published runner package that performed the run
+* `resolvedImages` a map of logical image name to the final image it resolved to
 
 The `e2eExecutions` and `e2eAggregate` fields replace the former singular E2E result shape. Consumers that read `summary.json` must use the new fields.
+
+The provenance fields (`configPath`, `runnerVersion`, `resolvedImages`) make each run auditable: a successful run records the exact contract, runner version, and the image each logical service resolved to.
 
 == Troubleshooting Quick Checks
 

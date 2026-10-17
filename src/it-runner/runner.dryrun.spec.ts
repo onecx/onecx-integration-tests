@@ -6,7 +6,10 @@ import { E2eExecutionRecord } from '../lib/models/interfaces/e2e.interface'
  * Test double used to validate dry-run behavior without starting real containers.
  */
 class StubPlatformRuntime implements PlatformRuntime {
-  constructor(private readonly configValid = true) {}
+  constructor(
+    private readonly configValid = true,
+    private readonly resolvedImages: Record<string, string> = {}
+  ) {}
   hasValidatedConfig(): boolean {
     return this.configValid
   }
@@ -33,6 +36,9 @@ class StubPlatformRuntime implements PlatformRuntime {
   }
   getAllContainers(): Map<string, unknown> {
     return new Map()
+  }
+  getResolvedImages(): Record<string, string> {
+    return this.resolvedImages
   }
 }
 

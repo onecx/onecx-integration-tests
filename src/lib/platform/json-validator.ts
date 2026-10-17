@@ -34,6 +34,14 @@ export class PlatformConfigJsonValidator {
       const configPath = this.resolveConfigPath(configFilePath)
 
       if (!configPath) {
+        // An explicitly selected contract is strict: there is no default or recursive fallback.
+        if (configFilePath) {
+          return {
+            isValid: false,
+            errors: [`Configuration file not found: ${configFilePath}`],
+          }
+        }
+
         return {
           isValid: false,
           errors: [
@@ -92,7 +100,11 @@ export class PlatformConfigJsonValidator {
   }
 
   /**
-   * Resolves the config file path, checking naming conventions and location
+   * Resolves the config file path, checking naming conventions and location.
+   *
+   * An explicitly provided path is strict: only the path as given or resolved against the
+   * current working directory is considered, with no fallback to the default path or a
+   * recursive search. Fallback discovery applies only when no path is provided.
    */
   private resolveConfigPath(configFilePath?: string): string | null {
     if (configFilePath) {
@@ -107,6 +119,8 @@ export class PlatformConfigJsonValidator {
       if (fs.existsSync(resolvedPath)) {
         return resolvedPath
       }
+
+      return null
     }
 
     const defaultConfigPath = path.join(this.SEARCH_ROOT, this.DEFAULT_CONFIG_RELATIVE_PATH)

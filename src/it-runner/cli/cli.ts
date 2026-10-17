@@ -25,6 +25,7 @@ function buildProgram(env: NodeJS.ProcessEnv): Command {
       .option('-v, --verbose', 'Enable verbose output', toBoolean(env.IT_VERBOSE, false))
       .option('--capture-logs', 'Capture runner console output to file', toBoolean(env.IT_CAPTURE_LOGS, true))
       .option('--dry-run', 'Print execution plan without running', false)
+      .option('--config <path>', 'Path to the platform.json contract')
   )
 }
 
@@ -51,12 +52,13 @@ export function parseCliArgs(argv: string[], env: NodeJS.ProcessEnv): CliOptions
       'code' in error &&
       (error as { code?: string }).code === 'commander.helpDisplayed'
     ) {
-      const helpOptions = program.opts<{ verbose?: boolean; captureLogs?: boolean }>()
+      const helpOptions = program.opts<{ verbose?: boolean; captureLogs?: boolean; config?: string }>()
       return {
         verbose: Boolean(helpOptions.verbose),
         dryRun: false,
         captureLogsToFile: Boolean(helpOptions.captureLogs),
         help: true,
+        configPath: helpOptions.config,
       }
     }
 
@@ -75,6 +77,7 @@ export function parseCliArgs(argv: string[], env: NodeJS.ProcessEnv): CliOptions
     captureLogs?: boolean
     dryRun?: boolean
     help?: boolean
+    config?: string
   }>()
 
   const options: CliOptions = {
@@ -83,6 +86,8 @@ export function parseCliArgs(argv: string[], env: NodeJS.ProcessEnv): CliOptions
     captureLogsToFile: Boolean(parsed.captureLogs),
     // Help is handled via commander.exitOverride() in the catch block above.
     help: Boolean(parsed.help),
+    // Explicitly selected contract path; undefined keeps default discovery.
+    configPath: parsed.config,
   }
 
   return options
